@@ -1,8 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("androidx.navigation.safeargs.kotlin")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -11,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "edu.utsa.cs3443.skyboltecommerceapp"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -35,6 +38,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 buildscript{
@@ -44,7 +50,9 @@ buildscript{
     }
 
     dependencies{
+        classpath(libs.hilt.android.gradle.plugin)
         classpath(libs.gradle)
+        classpath(libs.kotlin.gradle.plugin)
     }
 }
 
@@ -55,6 +63,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,6 +89,9 @@ dependencies {
     //Dagger hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    //Firebase
+    implementation(libs.firebase.auth)
 }
 
 kapt{

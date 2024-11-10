@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">SkyboltECommerceApp</string>
+    <string name="app_name">SkyboltCommerceApp</string>
+    <string name="RightAddress">Electrifying Deals\nAnytime\nAny-day</string>
+    <string name="Quality">Ready to feel the downpour of savings?\nWant to browse the hottest and latest?\nCome join us with our shocking experience\!</string>
+    <string name="BeginRegistration">Choose an option below!</string>
+    <string name="LetsLogin">Let\'s Login</string>
+    <string name="RegisterHereText">Don\'t have an account? Register here</string>
+    <string name="ForgotPassword">Forgot Password?</string>
+    <string name="LetsRegister">Let\'s Register</string>
+    <string name="LoginAccount">Already have an account? Log in</string>
 </resources>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/blurry_background"
+        android:scaleType="centerCrop"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LogoTopGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LogoBottomGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/LoginGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/RegisterGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.615"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SocialGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75"
+        />
+
+    <ImageView
+        android:id="@+id/AppLogo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/skybolt_ecommerce_logo"
+        app:layout_constraintBottom_toBottomOf="@id/LogoBottomGuideLine"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/LogoTopGuideline"
+        />
+
+    <TextView
+        android:id="@+id/BeginRegistration"
+        style="@style/h4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BeginRegistration"
+        app:layout_constraintEnd_toEndOf="@id/AppLogo"
+        app:layout_constraintStart_toStartOf="@id/AppLogo"
+        app:layout_constraintTop_toTopOf="@id/LogoBottomGuideLine"
+        android:layout_marginTop="15dp"/>
+    />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/LoginButton"
+        android:layout_width="@dimen/smallButtonWidth"
+        android:layout_height="@dimen/smallButtonHeight"
+        style="@style/whiteButtonStyle"
+        app:layout_constraintTop_toTopOf="@id/LoginGuideLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Log in"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/RegisterButton"
+        android:layout_width="@dimen/smallButtonWidth"
+        android:layout_height="@dimen/smallButtonHeight"
+        style="@style/blueButtonStyle"
+        app:layout_constraintTop_toTopOf="@id/RegisterGuideLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Register"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
