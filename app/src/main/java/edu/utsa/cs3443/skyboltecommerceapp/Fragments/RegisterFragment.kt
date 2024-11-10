@@ -51,6 +51,7 @@ class RegisterFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
 
+        //Here we bind each View to a specific press listener. IE, the user taps that view, it'll do some special logic
         binding.apply{
             RegisterAccountNow.setOnClickListener{
                 val user = User(
@@ -62,6 +63,18 @@ class RegisterFragment : Fragment()
                 val password : String = Utilities.input(EnterPassword);
 
                 viewModel.CreateAccountWithEmailAndPassword(user, password);
+            }
+
+            LoginExists.setOnClickListener{
+                Log.d(TAG, "User wants to login instead")
+            }
+
+            GoogleLogin.setOnClickListener{
+                Log.d(TAG, "User wants to login via Google")
+            }
+
+            FacebookLogin.setOnClickListener{
+                Log.d(TAG, "User wants to login via Facebook")
             }
         }
 
@@ -89,6 +102,7 @@ class RegisterFragment : Fragment()
             }
         }
 
+        //Here we validate each input passed inside, if it fails to validate, then we set the error flag in the EditText field with a message
         lifecycleScope.launchWhenStarted {
             viewModel.validation.collect { validation ->
                 if(validation.firstname is RegistrationValidator.Failed)

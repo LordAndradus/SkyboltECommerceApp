@@ -1,9 +1,9 @@
 package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
-import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegisterFieldState
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val _FirebaseAuthenticator: FirebaseAuth
+    private val FirebaseAuthenticator: FirebaseAuth
 ): ViewModel() {
     //We will be using registers here to keep track of how the app is operating, and to react accordingly
     private val _register = MutableStateFlow<Resource<FirebaseUser>>(Resource.Idle())
@@ -46,7 +46,7 @@ class RegisterViewModel @Inject constructor(
                 _register.emit(Resource.Loading())
             }
 
-            _FirebaseAuthenticator.createUserWithEmailAndPassword(user.Email, password)
+            FirebaseAuthenticator.createUserWithEmailAndPassword(user.Email, password)
                 .addOnSuccessListener {
                     it.user?.let {
                         _register.value = Resource.Success(it)

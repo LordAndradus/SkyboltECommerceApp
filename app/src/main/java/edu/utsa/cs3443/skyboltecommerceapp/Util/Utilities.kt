@@ -1,5 +1,9 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Util
 
+import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentRegisterBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 class Utilities
 {
     //Companion object acts as a static variable that we can use to store static functions
