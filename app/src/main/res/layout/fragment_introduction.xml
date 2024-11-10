@@ -43,6 +43,7 @@
         android:paddingBottom="30dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/StartButton"
         android:layout_width="@dimen/smallButtonWidth"
         android:layout_height="@dimen/smallButtonHeight"
         style="@style/blueButtonStyle"

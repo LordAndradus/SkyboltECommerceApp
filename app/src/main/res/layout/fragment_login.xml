@@ -99,16 +99,19 @@
         android:layout_marginTop="5dp"
         />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/RegisterAccountNow"
+    <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
+        android:id="@+id/LoginButton"
         android:layout_width="0dp"
         android:layout_height="@dimen/smallButtonHeight"
         style="@style/blueButtonStyle"
         app:layout_constraintTop_toBottomOf="@id/ForgotLoginPassword"
         app:layout_constraintStart_toStartOf="@id/LeftGuideline"
         app:layout_constraintEnd_toEndOf="@id/RightGuideline"
-        android:text="Log in"
+        android:text="Login"
+        android:textStyle="bold"
+        android:textAllCaps="true"
         android:layout_marginTop="15dp"
+        app:spinning_bar_color="@color/white"
         />
 
     <ImageView
@@ -117,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         app:layout_constraintStart_toStartOf="@id/LeftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/RegisterAccountNow"
+        app:layout_constraintTop_toBottomOf="@id/LoginButton"
         android:src="@drawable/facebook_login"
         />
 
@@ -137,7 +140,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         app:layout_constraintEnd_toEndOf="@id/RightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/RegisterAccountNow"
+        app:layout_constraintTop_toBottomOf="@id/LoginButton"
         android:src="@drawable/google_login"
         />
 

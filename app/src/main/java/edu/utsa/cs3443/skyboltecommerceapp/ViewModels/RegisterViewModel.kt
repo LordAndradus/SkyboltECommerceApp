@@ -6,6 +6,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegisterFieldState
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
@@ -28,11 +30,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val FirebaseAuthenticator: FirebaseAuth
+    private val FirebaseAuthenticator: FirebaseAuth,
+    private val database: FirebaseFirestore
 ): ViewModel() {
     //We will be using registers here to keep track of how the app is operating, and to react accordingly
-    private val _register = MutableStateFlow<Resource<FirebaseUser>>(Resource.Idle())
-    val register: Flow<Resource<FirebaseUser>> = _register
+    private val _register = MutableStateFlow<Resource<User>>(Resource.Idle())
+    val register: Flow<Resource<User>> = _register
 
     private val _validation = Channel<RegisterFieldState>()
     val validation = _validation.receiveAsFlow()
@@ -49,7 +52,8 @@ class RegisterViewModel @Inject constructor(
             FirebaseAuthenticator.createUserWithEmailAndPassword(user.Email, password)
                 .addOnSuccessListener {
                     it.user?.let {
-                        _register.value = Resource.Success(it)
+                        SaveUserInformation(it.uid, user)
+                        //_register.value = Resource.Success(it)
                     }
                 }.addOnFailureListener{
                     _register.value = Resource.Error(it.message.toString())
@@ -68,6 +72,19 @@ class RegisterViewModel @Inject constructor(
                 _validation.send(rfs)
             }
         }
+    }
+
+    private fun SaveUserInformation(userUID: String, user: User)
+    {
+        database.collection(USER_COLLECTION)
+            .document(userUID)
+            .set(user)
+            .addOnSuccessListener {
+                _register.value = Resource.Success(user)
+            }
+            .addOnFailureListener {
+                _register.value = Resource.Error(it.message.toString())
+            }
     }
 
     private fun CheckValidation(

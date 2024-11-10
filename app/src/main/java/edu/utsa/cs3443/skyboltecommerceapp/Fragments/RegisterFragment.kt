@@ -10,14 +10,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
-import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.RegisterViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -26,7 +24,7 @@ import kotlinx.coroutines.withContext
  * Adds functionality to the various buttons and editor text fields
  */
 
-private val TAG : String = "RegisterFragment"
+private val TAG : String = "Register Fragment"
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment()
