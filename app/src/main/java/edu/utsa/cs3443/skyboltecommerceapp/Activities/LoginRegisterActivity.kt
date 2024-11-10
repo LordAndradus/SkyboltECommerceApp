@@ -6,6 +6,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 import edu.utsa.cs3443.skyboltecommerceapp.R
 
+/**
+ * This class serves the special purpose of being the entrypoint to the app, it instantiates Dagger hilt APIs
+ *
+ * Additionally, it will load the first fragment "fragment_introduction", so that the user can start their journey
+ */
+
 @AndroidEntryPoint
 class LoginRegisterActivity : AppCompatActivity()
 {

@@ -20,11 +20,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule
 {
-    //Returns the current dependency instance of Firebase, so that we can inject it in the RegisterViewModel constructor
+    /**
+     * Attach the Authenticator service from Firebase to Dagger Hilt at runtime
+     * 
+     * @param null
+     * @return Instance of Firebase Authentication
+     */
     @Provides
     @Singleton
     fun provideFirebaseAuth() = FirebaseAuth.getInstance();
 
+
+    /**
+     * Attach firestore to Dagger Hilt at runtime
+     *
+     * @param null
+     * @return Instance of firestore
+     */
     @Provides
     @Singleton
     fun provideFirebaseFirestoreDatabase() = Firebase.firestore

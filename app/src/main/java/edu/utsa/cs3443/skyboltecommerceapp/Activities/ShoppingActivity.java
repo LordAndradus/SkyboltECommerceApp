@@ -10,6 +10,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import edu.utsa.cs3443.skyboltecommerceapp.R;
 
+/**
+ * The main soup and potatoes of the shopping experience
+ *
+ * TODO: The user can shop and browse at their leisure on this interface. Might use more fragments for a nav-map
+ */
+
 public class ShoppingActivity extends AppCompatActivity
 {
     @Override

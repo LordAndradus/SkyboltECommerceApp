@@ -41,9 +41,13 @@ class RegisterViewModel @Inject constructor(
     val validation = _validation.receiveAsFlow()
 
     /**
-     * A function that create a new user when the fields are properly inputted.
+     * A function that first validates all the filled in information.
      *
-     * Creates a new user and uploads that data to Firebase' Authentication service
+     * Then after validated, it creates a new user and uploads that data to Firebase Authentication services
+     *
+     * @param User Data container for user information
+     * @param String password
+     * @return null
      */
     fun CreateAccountWithEmailAndPassword(user: User, password: String)
     {
@@ -77,6 +81,16 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Creates a Collection for users to save it on a realtime database firestore
+     *
+     * After uploading it to the firestore, it will either report a success or failure.
+     * Upon failure, it sends a message indicating what went wrong
+     *
+     * @param String Unique User ID
+     * @param User Data container for user information
+     * @return null
+     */
     private fun SaveUserInformation(userUID: String, user: User)
     {
         database.collection(USER_COLLECTION)
@@ -90,6 +104,14 @@ class RegisterViewModel @Inject constructor(
             }
     }
 
+    /**
+     * A helper function to validate each parameter of what makes a User
+     * It calls helper functions from another file with special rules for each input
+     *
+     * @param User Data container for user information
+     * @param String Password
+     * @return Boolean for validation
+     */
     private fun CheckValidation(
         user: User,
         password: String

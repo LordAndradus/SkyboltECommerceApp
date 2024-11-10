@@ -1,5 +1,11 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Util
 
+/**
+ * This class will tell us if the registration process failed or succeeded.
+ *
+ * Upon failure, it will fill a message and export it for a class to read it
+ */
+
 sealed class RegistrationValidator
 {
     object Success : RegistrationValidator()

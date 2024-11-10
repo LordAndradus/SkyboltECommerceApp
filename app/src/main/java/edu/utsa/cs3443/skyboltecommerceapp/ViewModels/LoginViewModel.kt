@@ -19,6 +19,15 @@ class LoginViewModel @Inject constructor(
     private val _login = MutableSharedFlow<Resource<FirebaseUser>>()
     val login = _login.asSharedFlow()
 
+    /**
+     *  Interacts with Firebase Authentication service to log user into application
+     *
+     *  Reports a success or failure, pending on if the user exists in the database
+     *
+     * @param String Email
+     * @param String Password
+     * @return null
+     */
     fun Login(email: String, password: String)
     {
         viewModelScope.launch {

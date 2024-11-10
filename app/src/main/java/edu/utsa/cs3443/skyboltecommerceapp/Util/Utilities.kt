@@ -22,7 +22,7 @@ class Utilities
         }
 
         /**
-         * Converts the text from an EditText field in XML. It converts it to a trimmed string.
+         * Takes the text from an EditText field, and converts it to a String data-type that is trimmed
          *
          * @param android.widget.EditText string
          * @return Trimmed String
