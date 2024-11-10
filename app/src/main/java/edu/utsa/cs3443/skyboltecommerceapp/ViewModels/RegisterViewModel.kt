@@ -40,7 +40,11 @@ class RegisterViewModel @Inject constructor(
     private val _validation = Channel<RegisterFieldState>()
     val validation = _validation.receiveAsFlow()
 
-    //Creates a new user and uploads that data to a Firebase database
+    /**
+     * A function that create a new user when the fields are properly inputted.
+     *
+     * Creates a new user and uploads that data to Firebase' Authentication service
+     */
     fun CreateAccountWithEmailAndPassword(user: User, password: String)
     {
         if(CheckValidation(user, password))
@@ -53,7 +57,6 @@ class RegisterViewModel @Inject constructor(
                 .addOnSuccessListener {
                     it.user?.let {
                         SaveUserInformation(it.uid, user)
-                        //_register.value = Resource.Success(it)
                     }
                 }.addOnFailureListener{
                     _register.value = Resource.Error(it.message.toString())

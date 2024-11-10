@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
+import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
@@ -29,7 +31,7 @@ private val TAG : String = "Register Fragment"
 @AndroidEntryPoint
 class RegisterFragment : Fragment()
 {
-    //The binder takes the Register_Fragement.xml, this is the alternative to R.layout. Thanks dagger hilt!
+    //The binder takes the Register_Fragment.xml, this is the alternative to R.layout. Thanks dagger hilt!
     private lateinit var binding : FragmentRegisterBinding
     private val viewModel by viewModels<RegisterViewModel>()
 
@@ -42,9 +44,6 @@ class RegisterFragment : Fragment()
         return binding.root
     }
 
-    /**
-     * A function that create a new user when the fields are properly inputted.
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
@@ -60,11 +59,12 @@ class RegisterFragment : Fragment()
 
                 val password : String = Utilities.input(EnterPassword);
 
-                viewModel.CreateAccountWithEmailAndPassword(user, password);
+                viewModel.CreateAccountWithEmailAndPassword(user, password)
             }
 
             LoginExists.setOnClickListener{
                 Log.d(TAG, "User wants to login instead")
+                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
 
             GoogleLogin.setOnClickListener{
@@ -88,6 +88,7 @@ class RegisterFragment : Fragment()
                     is Resource.Success -> {
                         Log.d(TAG, it.data.toString())
                         binding.RegisterAccountNow.revertAnimation();
+                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                     }
 
                     is Resource.Error -> {

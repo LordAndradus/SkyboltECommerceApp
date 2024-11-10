@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
 import edu.utsa.cs3443.skyboltecommerceapp.R
@@ -50,11 +51,18 @@ class LoginFragment : Fragment(
                     return@setOnClickListener
                 }
 
+                if(email == null || email.isEmpty())
+                {
+                    Toast.makeText(requireContext(), "Email cannot be empty!", Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+
                 _ViewModel.Login(email, password)
             }
 
             binding.RegisterHere.setOnClickListener {
                 Log.d(TAG, "User wants to register instead")
+                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
             }
 
             binding.ForgotLoginPassword.setOnClickListener {
