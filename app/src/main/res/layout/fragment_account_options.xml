@@ -43,11 +43,11 @@
         />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/SocialGuideLine"
+        android:id="@+id/SkipForNowGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.75"
+        app:layout_constraintGuide_percent="0.730"
         />
 
     <ImageView
@@ -94,6 +94,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Register"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/SkipForNowButton"
+        android:layout_width="@dimen/smallButtonWidth"
+        android:layout_height="@dimen/smallButtonHeight"
+        style="@style/whiteButtonStyle"
+        app:layout_constraintTop_toTopOf="@id/SkipForNowGuideLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Skip for now"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

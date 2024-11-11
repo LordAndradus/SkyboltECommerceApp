@@ -13,7 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.RegisterViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentRegisterBinding
@@ -33,7 +32,7 @@ class RegisterFragment : Fragment()
 {
     //The binder takes the Register_Fragment.xml, this is the alternative to R.layout. Thanks dagger hilt!
     private lateinit var binding : FragmentRegisterBinding
-    private val viewModel by viewModels<RegisterViewModel>()
+    private val _ViewModel by viewModels<RegisterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +58,7 @@ class RegisterFragment : Fragment()
 
                 val password : String = Utilities.input(EnterPassword);
 
-                viewModel.CreateAccountWithEmailAndPassword(user, password)
+                _ViewModel.CreateAccountWithEmailAndPassword(user, password)
             }
 
             LoginExists.setOnClickListener{
@@ -78,7 +77,7 @@ class RegisterFragment : Fragment()
 
         //This is to specifically play an animation based on the state of Firebase, it will update when it reports anything
         lifecycleScope.launchWhenStarted {
-            viewModel.register.collect{
+            _ViewModel.register.collect{
                 Utilities.ResourceOperation(it,
                     {
                         binding.RegisterAccountNow.startAnimation()
@@ -97,7 +96,7 @@ class RegisterFragment : Fragment()
 
         //Here we validate each input passed inside, if it fails to validate, then we set the error flag in the EditText field with a message
         lifecycleScope.launchWhenStarted {
-            viewModel.validation.collect { validation ->
+            _ViewModel.validation.collect { validation ->
                 if(validation.firstname is RegistrationValidator.Failed)
                 {
                     withContext(Dispatchers.Main) {

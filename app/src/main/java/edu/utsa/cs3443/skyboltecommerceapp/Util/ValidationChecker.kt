@@ -70,3 +70,18 @@ fun ValidateLastName(lastName: String): RegistrationValidator
 
     return RegistrationValidator.Success
 }
+
+fun ValidateLoginEmail(email: String) : LoginValidator
+{
+    if(email.isEmpty()) return LoginValidator.Failed("Enter your email")
+    if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) return LoginValidator.Failed("Wrong email address")
+
+    return LoginValidator.success;
+}
+
+fun ValidateLoginPassword(password: String) : LoginValidator
+{
+    if(password.isEmpty()) return LoginValidator.Failed("Enter your password")
+
+    return LoginValidator.success
+}

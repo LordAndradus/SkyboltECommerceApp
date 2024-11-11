@@ -1,5 +1,9 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Util
 
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.FragmentActivity
+import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -112,10 +112,8 @@ class RegisterViewModel @Inject constructor(
      * @param String Password
      * @return Boolean for validation
      */
-    private fun CheckValidation(
-        user: User,
-        password: String
-    ) : Boolean {
+    private fun CheckValidation(user: User, password: String) : Boolean
+    {
         val EmailValidated = ValidateEmail(user.Email)
         val PasswordValidated = ValidatePassword(password)
         val FirstNameValidated = ValidateFirstName(user.FirstName)

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,10 +18,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
 import edu.utsa.cs3443.skyboltecommerceapp.Dialogs.setupBottomSheetDialog
 import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.LoginValidator
+import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.LoginViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentLoginBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withContext
 
 private val TAG: String = "Login Fragment"
 
@@ -30,6 +36,8 @@ class LoginFragment : Fragment(
 ){
     private lateinit var binding : FragmentLoginBinding
     private val _ViewModel by viewModels<LoginViewModel>()
+
+    private val validation = Channel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,18 +55,6 @@ class LoginFragment : Fragment(
             binding.LoginButton.setOnClickListener {
                 val email = EnterEmailHere.text.toString().trim()
                 val password = EnterPasswordHere.text.toString()
-
-                if(password == null || password.isEmpty())
-                {
-                    Toast.makeText(requireContext(), "Password cannot be empty!", Toast.LENGTH_LONG).show()
-                    return@setOnClickListener
-                }
-
-                if(email == null || email.isEmpty())
-                {
-                    Toast.makeText(requireContext(), "Email cannot be empty!", Toast.LENGTH_LONG).show()
-                    return@setOnClickListener
-                }
 
                 _ViewModel.Login(email, password)
             }
@@ -95,6 +91,7 @@ class LoginFragment : Fragment(
                     {
                         //revert animation to prevent memory leak
                         binding.LoginButton.revertAnimation()
+
                         Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
                             //Pop LoginRegisterActivity from stack
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -126,6 +123,31 @@ class LoginFragment : Fragment(
                     {
                         Snackbar.make(requireView(), "ERROR: ${it.message}", Snackbar.LENGTH_LONG).show()
                     })
+            }
+        }
+
+        //Here we validate each input passed inside, if it fails to validate, then we set the error flag in the EditText field with a message
+        lifecycleScope.launchWhenStarted {
+            _ViewModel.validation.collect { validation ->
+                if(validation.email is LoginValidator.Failed)
+                {
+                    withContext(Dispatchers.Main) {
+                        binding.EnterEmailHere.apply {
+                            requestFocus()
+                            error = validation.email.message
+                        }
+                    }
+                }
+
+                if(validation.password is LoginValidator.Failed)
+                {
+                    withContext(Dispatchers.Main) {
+                        binding.EnterPasswordHere.apply {
+                            requestFocus()
+                            error = validation.password.message
+                        }
+                    }
+                }
             }
         }
     }
