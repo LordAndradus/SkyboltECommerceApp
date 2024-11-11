@@ -79,25 +79,19 @@ class RegisterFragment : Fragment()
         //This is to specifically play an animation based on the state of Firebase, it will update when it reports anything
         lifecycleScope.launchWhenStarted {
             viewModel.register.collect{
-                when(it)
-                {
-                    is Resource.Loading -> {
-                        binding.RegisterAccountNow.startAnimation();
-                    }
-
-                    is Resource.Success -> {
+                Utilities.ResourceOperation(it,
+                    {
+                        binding.RegisterAccountNow.startAnimation()
+                    },
+                    {
                         Log.d(TAG, it.data.toString())
                         binding.RegisterAccountNow.revertAnimation();
                         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-                    }
-
-                    is Resource.Error -> {
+                    },
+                    {
                         Log.e(TAG, it.message.toString())
                         binding.RegisterAccountNow.revertAnimation();
-                    }
-
-                    else -> Utilities.nop() //Do nothing essentially
-                }
+                    })
             }
         }
 

@@ -8,4 +8,5 @@
     <string name="ForgotPassword">Forgot Password?</string>
     <string name="LetsRegister">Let\'s Register</string>
     <string name="LoginAccount">Already have an account? Log in</string>
+    <string name="ResetLinkText">We will send you a password reset link in your email</string>
 </resources>

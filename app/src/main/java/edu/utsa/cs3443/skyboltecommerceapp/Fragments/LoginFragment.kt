@@ -11,8 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
+import edu.utsa.cs3443.skyboltecommerceapp.Dialogs.setupBottomSheetDialog
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
@@ -60,13 +63,16 @@ class LoginFragment : Fragment(
                 _ViewModel.Login(email, password)
             }
 
+            binding.ForgotLoginPassword.setOnClickListener {
+                Log.d(TAG, "User wants to reset their password")
+                setupBottomSheetDialog { Email ->
+                    _ViewModel.ResetPassword(Email)
+                }
+            }
+
             binding.RegisterHere.setOnClickListener {
                 Log.d(TAG, "User wants to register instead")
                 findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-            }
-
-            binding.ForgotLoginPassword.setOnClickListener {
-                Log.d(TAG, "User wants to reset their password")
             }
 
             binding.GoogleLogin.setOnClickListener {
@@ -79,14 +85,14 @@ class LoginFragment : Fragment(
             }
         }
 
+        //Lifecycle listener when logging in
         lifecycleScope.launchWhenStarted {
             _ViewModel.login.collect() {
-                when(it) {
-                    is Resource.Loading -> {
+                Utilities.ResourceOperation<FirebaseUser>(it,
+                    {
                         binding.LoginButton.startAnimation()
-                    }
-
-                    is Resource.Success -> {
+                    },
+                    {
                         //revert animation to prevent memory leak
                         binding.LoginButton.revertAnimation()
                         Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
@@ -94,21 +100,32 @@ class LoginFragment : Fragment(
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity((intent))
                         }
-
-                    }
-
-                    is Resource.Error -> {
+                    },
+                    {
                         binding.LoginButton.revertAnimation()
                         if(it.message == null || it.message.toString().isEmpty())
                         {
                             Toast.makeText(requireContext(), "Password cannot be empty!", Toast.LENGTH_LONG).show()
-                            return@collect
+                            return@ResourceOperation
                         }
                         Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-                    }
+                    })
+            }
+        }
 
-                    else -> Utilities.nop()
-                }
+        //Lifecycle listener when resetting password
+        lifecycleScope.launchWhenStarted {
+            _ViewModel.resetPassword.collect {
+                Utilities.ResourceOperation<String>(it,
+                    {
+
+                    },
+                    {
+                        Snackbar.make(requireView(), "Reset link was sent to your email", Snackbar.LENGTH_LONG).show()
+                    },
+                    {
+                        Snackbar.make(requireView(), "ERROR: ${it.message}", Snackbar.LENGTH_LONG).show()
+                    })
             }
         }
     }
