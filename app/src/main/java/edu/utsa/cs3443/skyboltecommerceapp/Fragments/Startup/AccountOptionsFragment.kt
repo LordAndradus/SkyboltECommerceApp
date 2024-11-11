@@ -1,4 +1,4 @@
-package edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister
+package edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup
 
 import android.content.Intent
 import android.os.Bundle

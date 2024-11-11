@@ -71,6 +71,12 @@ fun ValidateLastName(lastName: String): RegistrationValidator
     return RegistrationValidator.Success
 }
 
+/**
+ * Validates the Email before sending the data to Firebase, so as to ensure the application will not crash
+ *
+ * @param String An email address
+ * @return a Validator that is a success, or a failure with a message explaining what went wrong
+ */
 fun ValidateLoginEmail(email: String) : LoginValidator
 {
     if(email.isEmpty()) return LoginValidator.Failed("Enter your email")
@@ -79,6 +85,12 @@ fun ValidateLoginEmail(email: String) : LoginValidator
     return LoginValidator.success;
 }
 
+/**
+ * Validates that the password field is not empty before sending the data to Firebase, so as to ensure the application will not crash
+ *
+ * @param String An email address
+ * @return a Validator that is a success, or a failure with a message explaining what went wrong
+ */
 fun ValidateLoginPassword(password: String) : LoginValidator
 {
     if(password.isEmpty()) return LoginValidator.Failed("Enter your password")
