@@ -7,6 +7,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import edu.utsa.cs3443.skyboltecommerceapp.R
 
+/**
+ * Instead of using a whole fragment, this is a dialog box that will pop up from the bottom to prompt
+ * the user on entering an email to reset a password
+ *
+ * @param Lambda onSendClick - The operation we will enact when tapping the send button, takes a string arg
+ */
+
 fun Fragment.setupBottomSheetDialog(
     onSendClick: (String) -> Unit,
 ) {

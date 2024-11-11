@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/introductionFragment"
-        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister.IntroductionFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup.IntroductionFragment"
         android:label="IntroductionFragment"
         tool:layout="@layout/fragment_introduction">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister.RegisterFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup.RegisterFragment"
         android:label="RegisterFragment"
         tool:layout="@layout/fragment_register">
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister.LoginFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup.LoginFragment"
         android:label="LoginFragment"
         tool:layout="@layout/fragment_login">
         <action
@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/accountOptionsFragment"
-        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister.AccountOptionsFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup.AccountOptionsFragment"
         android:label="AccountOptionsFragment"
         tool:layout="@layout/fragment_account_options">
         <action

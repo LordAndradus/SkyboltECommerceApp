@@ -8,6 +8,12 @@ import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentRegisterBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * Primarily a static class, this handles function calls that are helpful for constructing the app
+ *
+ * May or may not include variables in the future.
+ */
+
 class Utilities
 {
     //Companion object acts as a static variable that we can use to store static functions

@@ -1,4 +1,4 @@
-package edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister
+package edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentAccountOptionsBinding
+
+/**
+ * The fragment page that handles what action the user will do
+ *
+ * There are three choices
+ * Log in -> Log into their account and access their shopping data
+ * Register -> Create an account to store their shopping data
+ * Skip for now -> Skip creating/logging in, and view what products are available
+ */
 
 @AndroidEntryPoint
 class AccountOptionsFragment : Fragment(

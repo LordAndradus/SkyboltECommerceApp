@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "edu.utsa.cs3443.skyboltecommerceapp"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -47,6 +47,8 @@ buildscript{
     repositories{
         google()
         mavenCentral()
+        @Suppress("DEPRECATION")
+        jcenter()
     }
 
     dependencies{
@@ -69,6 +71,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //Navigation Component
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
     //Loading button
     implementation(libs.loading.button.android)
 
@@ -79,7 +85,7 @@ dependencies {
     implementation(libs.circleimageview)
 
     //View page Indicator
-    //implementation(libs.viewpagerindicator)
+    implementation(libs.dxslin.viewpagerindicator)
 
     //Step Viewer
     implementation(libs.stepview)

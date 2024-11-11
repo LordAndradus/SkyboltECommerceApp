@@ -1,14 +1,14 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Activities;
 
-import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity
+
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 
 import edu.utsa.cs3443.skyboltecommerceapp.R;
+import edu.utsa.cs3443.skyboltecommerceapp.databinding.ActivityShoppingBinding;
 
 /**
  * The main soup and potatoes of the shopping experience
@@ -16,18 +16,19 @@ import edu.utsa.cs3443.skyboltecommerceapp.R;
  * TODO: The user can shop and browse at their leisure on this interface. Might use more fragments for a nav-map
  */
 
-public class ShoppingActivity extends AppCompatActivity
+class ShoppingActivity : AppCompatActivity()
 {
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    val binding by lazy {
+        ActivityShoppingBinding.inflate(layoutInflater)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?)
     {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_shopping);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        //Setup the home bar to navigate via categories
+        val navController = findNavController(R.id.ShoppingHostFragment)
+        binding.BottomNavigator.setupWithNavController(navController)
     }
 }

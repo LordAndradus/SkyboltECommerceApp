@@ -1,4 +1,4 @@
-package edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister
+package edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,12 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentIntroductionBinding
+
+/**
+ * The introduction page, to introduce users to our app with some catchy phrases
+ *
+ * Mainly adds functionality to the start button
+ */
 
 @AndroidEntryPoint
 class IntroductionFragment : Fragment(

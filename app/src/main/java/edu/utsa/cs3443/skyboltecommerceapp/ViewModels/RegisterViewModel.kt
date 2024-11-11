@@ -1,6 +1,7 @@
 package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
 import androidx.lifecycle.ViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore

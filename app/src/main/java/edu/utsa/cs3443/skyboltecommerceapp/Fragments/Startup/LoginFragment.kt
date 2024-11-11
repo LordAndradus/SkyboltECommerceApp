@@ -1,4 +1,4 @@
-package edu.utsa.cs3443.skyboltecommerceapp.Fragments.LoginRegister
+package edu.utsa.cs3443.skyboltecommerceapp.Fragments.Startup
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,14 +18,18 @@ import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
 import edu.utsa.cs3443.skyboltecommerceapp.Dialogs.setupBottomSheetDialog
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.LoginValidator
-import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.LoginViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentLoginBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
+
+/**
+ * Handles the fragment xml for Logging in users.
+ *
+ * Adds functionality to the various buttons and editor text fields
+ */
 
 private val TAG: String = "Login Fragment"
 
