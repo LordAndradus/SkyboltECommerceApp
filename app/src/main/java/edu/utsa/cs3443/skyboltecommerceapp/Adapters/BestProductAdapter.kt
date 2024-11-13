@@ -2,39 +2,40 @@ package edu.utsa.cs3443.skyboltecommerceapp.Adapters
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
-import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvSpecialItemBinding
+import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvProductItemBinding
 
-class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHolder>()
+class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.ViewHolder>()
 {
-    inner class ViewHolder(private val binding: RvSpecialItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(private val binding: RvProductItemBinding): RecyclerView.ViewHolder(binding.root)
     {
-        @SuppressLint("DefaultLocale")
+        @SuppressLint("DefaultLocale", "SetTextI18n")
         fun bind(product: Product)
         {
             binding.apply {
-                Glide.with(itemView).load(product.images[0]).into(imageSpecialRVItem)
-                tvSpecialProductName.text = product.name
-                tvSpecialProductPrice.text = "$${String.format("%.2f", product.price)}"
+                Glide.with(itemView).load(product.images[0]).into(imgProduct)
                 product.offerPercentage?.let {
-                    val percentOff = 1 - product.offerPercentage
-                    val finalPrice = product.price * percentOff
-                    tvSpecialProductPrice.text = "$${String.format("%.2f", finalPrice)}"
-                    tvSpecialProductPrice.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-                    tvSpecialProductPrice.setTypeface(null, Typeface.ITALIC)
+                    val remainingPricePercentage = 1 - it
+                    val priceFinal = remainingPricePercentage * product.price
+                    tvNewPrice.text = "$${String.format("%.02f", priceFinal)}"
+                    tvPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 }
+                if(product.offerPercentage == null) tvNewPrice.visibility = View.INVISIBLE
+                tvPrice.text =  "$${product.price}"
+                tvName.text = product.name
             }
         }
     }
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Product>() {
+    private val diffCallback = object : DiffUtil.ItemCallback<Product>()
+    {
         override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean
         {
             return oldItem.id == newItem.id
@@ -46,14 +47,13 @@ class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHo
         }
     }
 
-    val differ = AsyncListDiffer(this, diffCallBack)
-
+    val differ = AsyncListDiffer(this, diffCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
         return ViewHolder(
-            RvSpecialItemBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+            RvProductItemBinding.inflate(
+                LayoutInflater.from(parent.context)
             )
         )
     }

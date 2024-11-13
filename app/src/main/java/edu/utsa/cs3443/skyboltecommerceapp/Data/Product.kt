@@ -5,9 +5,12 @@ data class Product(
     val name: String,
     val category: String,
     val price: Float,
-    val percentageDeal: Float? = null,
+    val offerPercentage: Float? = 0f,
     val description: String? = null,
     val colors: List<Int>? = null,
+    val special: Boolean? = false,
+    val bestDeal: Boolean? = false,
+    val bestProduct : Boolean? = false,
     val sizes: List<String>? = null,
     val images: List<String>
 ){

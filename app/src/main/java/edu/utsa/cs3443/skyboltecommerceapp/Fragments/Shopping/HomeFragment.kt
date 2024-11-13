@@ -50,6 +50,8 @@ class HomeFragment : Fragment(
             PetsFragment()
         )
 
+        binding.ViewpagerHome.isUserInputEnabled = false
+
         val viewPager2Adapter = HomeViewpagerAdapter(CategoriesFragments, childFragmentManager, lifecycle)
         binding.ViewpagerHome.adapter = viewPager2Adapter
 

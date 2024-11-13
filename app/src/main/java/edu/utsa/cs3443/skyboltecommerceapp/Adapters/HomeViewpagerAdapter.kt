@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 /**
- * An adapter fro the Viewpager, so users can examine products at their leisure
+ * An adapter for the Viewpager, so users can examine products at their leisure
  *
  * @param FragmentManager Manages the fragments that the user will see
  * @param Lifecycle Manages the lifecycle of the fragments, typically will last until we exit the page, or when we exit the app

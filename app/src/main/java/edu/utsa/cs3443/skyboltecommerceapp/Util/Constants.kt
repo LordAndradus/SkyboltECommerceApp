@@ -25,5 +25,6 @@ enum class Categories(val category: String)
     Electronics("electronics"),
     Furniture("furniture"),
     Medical("medical"),
+    Food("food"),
     Pets("pets")
 }
