@@ -1,5 +1,7 @@
 package edu.utsa.cs3443.skyboltecommerceapp.DependencyInjection
 
+import android.app.Application
+import android.content.Context.MODE_PRIVATE
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -7,6 +9,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.INTRODUCTION_SHARED_PREFERENCES
 import javax.inject.Singleton
 
 /**
@@ -40,4 +44,9 @@ object AppModule
     @Provides
     @Singleton
     fun provideFirebaseFirestoreDatabase() = Firebase.firestore
+
+    @Provides
+    fun provideIntroductionSP(
+        application: Application
+    ) = application.getSharedPreferences(INTRODUCTION_SHARED_PREFERENCES, MODE_PRIVATE)
 }

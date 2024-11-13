@@ -11,6 +11,9 @@ object Constants
 {
     const val USER_COLLECTION = "user"
     const val PRODUCT_COLLECTION = "products"
+
+    const val INTRODUCTION_SHARED_PREFERENCES = "IntroductionSP"
+    const val INTRODUCTION_KEY = "IntroductionKey"
 }
 
 /**
