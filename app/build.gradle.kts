@@ -99,6 +99,9 @@ dependencies {
 
     //Firebase
     implementation(libs.firebase.auth)
+
+    //Google play services
+    implementation("com.google.android.gms:play-services:12.0.1")
 }
 
 kapt{

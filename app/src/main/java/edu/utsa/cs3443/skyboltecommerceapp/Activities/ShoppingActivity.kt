@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import dagger.hilt.android.AndroidEntryPoint
 
 import edu.utsa.cs3443.skyboltecommerceapp.R;
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.ActivityShoppingBinding;
@@ -15,7 +16,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.databinding.ActivityShoppingBinding;
  *
  * TODO: The user can shop and browse at their leisure on this interface. Might use more fragments for a nav-map
  */
-
+@AndroidEntryPoint
 class ShoppingActivity : AppCompatActivity()
 {
     val binding by lazy {

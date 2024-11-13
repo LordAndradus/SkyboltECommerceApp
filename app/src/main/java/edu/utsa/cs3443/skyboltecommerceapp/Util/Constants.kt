@@ -10,4 +10,20 @@ package edu.utsa.cs3443.skyboltecommerceapp.Util
 object Constants
 {
     const val USER_COLLECTION = "user"
+    const val PRODUCT_COLLECTION = "products"
+}
+
+/**
+ * A constant class
+ *
+ * Keeps track of what categories have been added to the project
+ */
+enum class Categories(val category: String)
+{
+    Special("special product"),
+    Fashion("fashion"),
+    Electronics("electronics"),
+    Furniture("furniture"),
+    Medical("medical"),
+    Pets("pets")
 }
