@@ -13,7 +13,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvBestDealsItemBinding;
 
 class BestDealsAdapter: RecyclerView.Adapter<BestDealsAdapter.ViewHolder>()
 {
-    inner class ViewHolder(private val binding:RvBestDealsItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(private val binding: RvBestDealsItemBinding): RecyclerView.ViewHolder(binding.root)
     {
         @SuppressLint("DefaultLocale", "SetTextI18n")
         fun bind(product: Product)

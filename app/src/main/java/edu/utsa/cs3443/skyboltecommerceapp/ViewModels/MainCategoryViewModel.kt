@@ -26,14 +26,19 @@ class MainCategoryViewModel @Inject constructor(
     private val _bestProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Idle())
     val bestProducts: StateFlow<Resource<List<Product>>> = _bestProducts
 
+    private val _exploreProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Idle())
+    val exploreProducts: StateFlow<Resource<List<Product>>> = _exploreProducts
+
     private val bestProductPaging = PagingInformation()
     private val bestDealsPaging = PagingInformation()
     private val specialProductsPaging = PagingInformation()
+    private val allProductsPaging = PagingInformation()
 
     init {
         fetchSpecialProducts()
         fetchBestDeals()
         fetchBestProducts()
+        fetchAllProducts()
     }
 
     fun fetchSpecialProducts()
@@ -98,7 +103,7 @@ class MainCategoryViewModel @Inject constructor(
                 _bestProducts.emit(Resource.Loading())
 
                 firestore.collection(Constants.PRODUCT_COLLECTION)
-                    //.whereEqualTo("bestProduct", true)
+                    .whereEqualTo("bestProduct", true)
                     .limit(bestProductPaging.currentPage * 10).get()
                     .addOnSuccessListener { result ->
                         val bestProductsList = result.toObjects(Product::class.java)
@@ -112,6 +117,35 @@ class MainCategoryViewModel @Inject constructor(
                     .addOnFailureListener {
                         viewModelScope.launch {
                             _bestProducts.emit(Resource.Error(it.message.toString()))
+                        }
+                    }
+            }
+        }
+    }
+
+    fun fetchAllProducts()
+    {
+        if(!allProductsPaging.isPagingFinished)
+        {
+            viewModelScope.launch {
+                _exploreProducts.emit(Resource.Loading())
+
+                firestore.collection(Constants.PRODUCT_COLLECTION)
+                    //.whereEqualTo("bestProduct", true)
+                    //.limit(allProductsPaging.currentPage * 10).get()
+                    .get()
+                    .addOnSuccessListener { result ->
+                        val allProductsList = result.toObjects(Product::class.java)
+                        viewModelScope.launch {
+                            allProductsPaging.isPagingFinished = allProductsList == allProductsPaging.oldList
+                            allProductsPaging.oldList = allProductsList
+                            _exploreProducts.emit(Resource.Success(allProductsList))
+                        }
+                        allProductsPaging.currentPage++
+                    }
+                    .addOnFailureListener {
+                        viewModelScope.launch {
+                            _exploreProducts.emit(Resource.Error(it.message.toString()))
                         }
                     }
             }

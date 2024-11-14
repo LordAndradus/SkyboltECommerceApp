@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
+import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ExploreProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
@@ -35,6 +36,7 @@ class MainCategoryFragment : Fragment(
     private lateinit var specialProductsAdapter : SpecialProductsAdapter
     private lateinit var bestDealsAdapter: BestDealsAdapter
     private lateinit var bestProductAdapter: BestProductAdapter
+    private lateinit var exploreProductsAdapter: ExploreProductsAdapter
     private val viewModel by viewModels<MainCategoryViewModel>()
 
     override fun onCreateView(
@@ -53,6 +55,9 @@ class MainCategoryFragment : Fragment(
         setupSpecialProductRv()
         setupBestDealsRv()
         setupBestProductsRv()
+
+        //Experimental
+        setupExploreProductsRv()
 
         lifecycleScope.launchWhenStarted {
             viewModel.specialProducts.collectLatest {
@@ -98,6 +103,24 @@ class MainCategoryFragment : Fragment(
                     },
                     {
                         bestProductAdapter.differ.submitList(it.data)
+                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
+                    },
+                    {
+                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
+                        Log.e(TAG, it.message.toString())
+                        Utilities.showToast(requireContext(), it.message.toString())
+                    })
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.exploreProducts.collectLatest {
+                Utilities.ResourceOperation(it,
+                    {
+                        binding.BestProductsLoadingProgressBar.visibility = View.VISIBLE
+                    },
+                    {
+                        exploreProductsAdapter.differ.submitList(it.data)
                         binding.BestProductsLoadingProgressBar.visibility = View.GONE
                     },
                     {
@@ -174,6 +197,15 @@ class MainCategoryFragment : Fragment(
         binding.rvBestDeals.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = bestDealsAdapter
+        }
+    }
+
+    private fun setupExploreProductsRv()
+    {
+        exploreProductsAdapter = ExploreProductsAdapter()
+        binding.rvAllProducts.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+            adapter = exploreProductsAdapter
         }
     }
 }
