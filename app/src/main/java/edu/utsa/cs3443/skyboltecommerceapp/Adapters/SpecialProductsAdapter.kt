@@ -26,7 +26,7 @@ class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHo
                 product.offerPercentage?.let {
                     val percentOff = 1 - product.offerPercentage
                     val finalPrice = product.price * percentOff
-                    tvSpecialProductPrice.text = "$${String.format("%.2f", finalPrice)}"
+                    tvSpecialProductPrice.text = "$${String.format("%.02f", finalPrice)}"
                     tvSpecialProductPrice.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                     tvSpecialProductPrice.setTypeface(null, Typeface.ITALIC)
                 }

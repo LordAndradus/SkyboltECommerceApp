@@ -1,15 +1,9 @@
 package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import edu.utsa.cs3443.skyboltecommerceapp.Data.ProductLister
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +11,7 @@ class MainCategoryViewModel @Inject constructor(
     private val firestore: FirebaseFirestore
 ): ViewModel() {
 
-    private val _specialProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Idle())
+    /*private val _specialProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Idle())
     val specialProducts: StateFlow<Resource<List<Product>>> = _specialProducts
 
     private val _bestDeals = MutableStateFlow<Resource<List<Product>>>(Resource.Idle())
@@ -32,16 +26,27 @@ class MainCategoryViewModel @Inject constructor(
     private val bestProductPaging = PagingInformation()
     private val bestDealsPaging = PagingInformation()
     private val specialProductsPaging = PagingInformation()
-    private val allProductsPaging = PagingInformation()
+    private val allProductsPaging = PagingInformation()*/
+
+    val specialProductsLister = ProductLister(this, firestore)
+    val bestDealsLister = ProductLister(this, firestore)
+    val bestProductsLister = ProductLister(this, firestore)
+    val allProductsLister = ProductLister(this, firestore)
 
     init {
-        fetchSpecialProducts()
+        //Set fetch type
+        specialProductsLister.setFetch(ProductLister.FetchParams.WithFilter(1L, "special", true))
+        bestDealsLister.setFetch(ProductLister.FetchParams.WithFilter(1L, "bestDeal", true))
+        bestProductsLister.setFetch(ProductLister.FetchParams.WithFilter(-1L, "bestProduct", true))
+        allProductsLister.setFetch(ProductLister.FetchParams.WithoutFilter(10L))
+
+        /*fetchSpecialProducts()
         fetchBestDeals()
         fetchBestProducts()
-        fetchAllProducts()
+        fetchAllProducts()*/
     }
 
-    fun fetchSpecialProducts()
+    /*fun fetchSpecialProducts()
     {
         if(!specialProductsPaging.isPagingFinished)
         {
@@ -156,5 +161,5 @@ class MainCategoryViewModel @Inject constructor(
         var currentPage: Long = 1,
         var oldList: List<Product> = emptyList(),
         var isPagingFinished: Boolean = false
-    )
+    )*/
 }

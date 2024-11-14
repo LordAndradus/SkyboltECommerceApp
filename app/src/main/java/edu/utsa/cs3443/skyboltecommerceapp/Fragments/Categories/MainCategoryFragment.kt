@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ExploreProductsAdapter
+import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ParentRecyclerViewAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
@@ -43,7 +44,7 @@ class MainCategoryFragment : Fragment(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCategoryMainBinding.inflate(inflater)
         return binding.root
     }
@@ -60,7 +61,7 @@ class MainCategoryFragment : Fragment(
         setupExploreProductsRv()
 
         lifecycleScope.launchWhenStarted {
-            viewModel.specialProducts.collectLatest {
+            viewModel.specialProductsLister.productList.collectLatest {
                 Utilities.ResourceOperation(it,
                     {
                         showLoading()
@@ -78,7 +79,7 @@ class MainCategoryFragment : Fragment(
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.bestDeals.collectLatest {
+            viewModel.bestDealsLister.productList.collectLatest {
                 Utilities.ResourceOperation(it,
                     {
                         showLoading()
@@ -96,7 +97,7 @@ class MainCategoryFragment : Fragment(
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.bestProducts.collectLatest {
+            viewModel.bestProductsLister.productList.collectLatest {
                 Utilities.ResourceOperation(it,
                     {
                         binding.BestProductsLoadingProgressBar.visibility = View.VISIBLE
@@ -114,7 +115,7 @@ class MainCategoryFragment : Fragment(
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.exploreProducts.collectLatest {
+            viewModel.allProductsLister.productList.collectLatest {
                 Utilities.ResourceOperation(it,
                     {
                         binding.BestProductsLoadingProgressBar.visibility = View.VISIBLE
@@ -135,7 +136,7 @@ class MainCategoryFragment : Fragment(
             if(view.getChildAt(0).bottom <= view.height + scrollY)
             {
                 //We reached the bottom of the scroll view
-                viewModel.fetchBestProducts()
+                viewModel.allProductsLister.fetch()
             }
         })
     }
@@ -175,7 +176,39 @@ class MainCategoryFragment : Fragment(
                         Log.d("Recycler View Scrolling", "Fetching Products")
 
                         //End of list reached
-                        viewModel.fetchSpecialProducts()
+                        viewModel.specialProductsLister.fetch()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun setupBestDealsRv()
+    {
+        bestDealsAdapter = BestDealsAdapter()
+        binding.rvBestDeals.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = bestDealsAdapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)
+                {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val lM = (layoutManager as LinearLayoutManager)
+                    val lastItemPosition = lM.findLastCompletelyVisibleItemPosition()
+                    val totalItemCount = lM.itemCount
+
+                    Log.d("Recycler View Scrolling",
+                        String.format("Last position %d => Total Count %d\n", lastItemPosition, totalItemCount)
+                    )
+
+                    if(lastItemPosition == totalItemCount - 1)
+                    {
+                        Log.d("Recycler View Scrolling", "Fetching Products")
+
+                        //End of list reached
+                        viewModel.bestDealsLister.fetch()
                     }
                 }
             })
@@ -191,19 +224,10 @@ class MainCategoryFragment : Fragment(
         }
     }
 
-    private fun setupBestDealsRv()
-    {
-        bestDealsAdapter = BestDealsAdapter()
-        binding.rvBestDeals.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = bestDealsAdapter
-        }
-    }
-
     private fun setupExploreProductsRv()
     {
         exploreProductsAdapter = ExploreProductsAdapter()
-        binding.rvAllProducts.apply {
+        binding.rvExploreProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
             adapter = exploreProductsAdapter
         }

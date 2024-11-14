@@ -1,6 +1,5 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
-import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvBestDealsItemBinding
 
 abstract class ParentRecyclerViewAdapter<T: ViewBinding>(
     private val inflateBinding: (LayoutInflater, ViewGroup?, Boolean) -> T,
@@ -42,6 +40,11 @@ abstract class ParentRecyclerViewAdapter<T: ViewBinding>(
 
     lateinit var view: T
     lateinit var vh: ParentRecyclerViewAdapter<T>.ViewHolder
+
+    fun getGenericType(): T
+    {
+        return view
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
