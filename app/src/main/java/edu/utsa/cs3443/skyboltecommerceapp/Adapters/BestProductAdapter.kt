@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvProductItemBinding
 
 class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.ViewHolder>()
@@ -24,11 +25,11 @@ class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.ViewHolder>()
                 product.offerPercentage?.let {
                     val remainingPricePercentage = 1 - it
                     val priceFinal = remainingPricePercentage * product.price
-                    tvNewPrice.text = "$${String.format("%.02f", priceFinal)}"
+                    tvNewPrice.text = Utilities.price(priceFinal)
                     tvPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 }
                 if(product.offerPercentage == null) tvNewPrice.visibility = View.INVISIBLE
-                tvPrice.text =  "$${product.price}"
+                tvPrice.text =  Utilities.price(product.price)
                 tvName.text = product.name
             }
         }
@@ -62,10 +63,16 @@ class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.ViewHolder>()
     {
         val product = differ.currentList[position]
         holder.bind(product)
+
+        holder.itemView.setOnClickListener {
+            onClick?.invoke(product)
+        }
     }
 
     override fun getItemCount(): Int
     {
         return differ.currentList.size
     }
+
+    var onClick: ((Product) -> Unit) ?= null
 }

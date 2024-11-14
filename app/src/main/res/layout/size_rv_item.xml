@@ -6,7 +6,7 @@
 
     <View
         android:id="@+id/rectShadow"
-        android:layout_width="204dp"
+        android:layout_width="60dp"
         android:layout_height="25dp"
         android:background="@drawable/blue_background"
         android:src="#B8D9FA"
@@ -16,7 +16,7 @@
 
     <View
         android:id="@+id/rectImage"
-        android:layout_width="202dp"
+        android:layout_width="58dp"
         android:layout_height="23dp"
         android:background="@drawable/rectangle"
         android:backgroundTint="@color/g_gray700"

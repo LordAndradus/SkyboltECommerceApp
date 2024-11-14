@@ -27,16 +27,16 @@ class ColorsAdapter: RecyclerView.Adapter<ColorsAdapter.ViewHolder>()
             if(position == selectedPosition)
             {
                 binding.apply {
-                    colorShadow.visibility = View.INVISIBLE
-                    imagePicked.visibility = View.INVISIBLE
+                    colorShadow.visibility = View.VISIBLE
+                    imagePicked.visibility = View.VISIBLE
                 }
             }
             //Color is not selected
             else
             {
                 binding.apply {
-                    colorShadow.visibility = View.VISIBLE
-                    imagePicked.visibility = View.VISIBLE
+                    colorShadow.visibility = View.INVISIBLE
+                    imagePicked.visibility = View.INVISIBLE
                 }
             }
         }

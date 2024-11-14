@@ -9,17 +9,29 @@
         android:id="@+id/cartFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.CartFragment"
         android:label="CartFragment"
-        tools:layout="@layout/fragment_shopping_cart" />
+        tools:layout="@layout/fragment_shopping_cart" >
+        <action
+            android:id="@+id/action_cartFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_shopping_home" />
+        tools:layout="@layout/fragment_shopping_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_shopping_search"/>
+        tools:layout="@layout/fragment_shopping_search">
+        <action
+            android:id="@+id/action_searchFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProfileFragment"
@@ -29,5 +41,9 @@
         android:id="@+id/productDetailsFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProductDetailsFragment"
         android:label="ProductDetailsFragment"
-        tools:layout="@layout/fragment_shopping_product_details"/>
+        tools:layout="@layout/fragment_shopping_product_details">
+        <argument
+            android:name="product"
+            app:argType="edu.utsa.cs3443.skyboltecommerceapp.Data.Product" />
+    </fragment>
 </navigation>

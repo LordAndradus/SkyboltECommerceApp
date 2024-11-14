@@ -40,7 +40,8 @@ class ViewPager2Images: RecyclerView.Adapter<ViewPager2Images.ViewHolder>()
     {
         return ViewHolder(
             ViewpagerImageItemBinding.inflate(
-                LayoutInflater.from(parent.context)
+                LayoutInflater.from(parent.context),
+                parent, false
             )
         )
     }

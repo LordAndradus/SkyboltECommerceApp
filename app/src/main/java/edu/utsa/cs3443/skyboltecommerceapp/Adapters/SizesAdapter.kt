@@ -22,14 +22,14 @@ class SizesAdapter: RecyclerView.Adapter<SizesAdapter.ViewHolder>()
             if(position == selectedPosition)
             {
                 binding.apply {
-                    rectShadow.visibility = View.INVISIBLE
+                    rectShadow.visibility = View.VISIBLE
                 }
             }
             //Size is not selected
             else
             {
                 binding.apply {
-                    rectShadow.visibility = View.VISIBLE
+                    rectShadow.visibility = View.INVISIBLE
                 }
             }
         }

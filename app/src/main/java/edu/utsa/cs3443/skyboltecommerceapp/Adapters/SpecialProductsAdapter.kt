@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvSpecialItemBinding
 
 class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHolder>()
@@ -22,11 +23,11 @@ class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHo
             binding.apply {
                 Glide.with(itemView).load(product.images[0]).into(imageSpecialRVItem)
                 tvSpecialProductName.text = product.name
-                tvSpecialProductPrice.text = "$${String.format("%.2f", product.price)}"
+                tvSpecialProductPrice.text = Utilities.price(product.price)
                 product.offerPercentage?.let {
                     val percentOff = 1 - product.offerPercentage
                     val finalPrice = product.price * percentOff
-                    tvSpecialProductPrice.text = "$${String.format("%.2f", finalPrice)}"
+                    tvSpecialProductPrice.text = Utilities.price(finalPrice)
                     tvSpecialProductPrice.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                     tvSpecialProductPrice.setTypeface(null, Typeface.ITALIC)
                 }
@@ -62,10 +63,16 @@ class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHo
     {
         val product = differ.currentList[position]
         holder.bind(product)
+
+        holder.itemView.setOnClickListener {
+            onClick?.invoke(product)
+        }
     }
 
     override fun getItemCount(): Int
     {
         return differ.currentList.size
     }
+
+    var onClick: ((Product) -> Unit) ?= null
 }

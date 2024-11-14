@@ -14,6 +14,8 @@ object Constants
 
     const val INTRODUCTION_SHARED_PREFERENCES = "IntroductionSP"
     const val INTRODUCTION_KEY = "IntroductionKey"
+
+    const val CURRENCY_SYMBOL = '$'
 }
 
 /**
@@ -26,6 +28,7 @@ enum class Categories(val category: String)
     Special("special product"),
     Fashion("fashion"),
     Electronics("electronics"),
+    Accessories("accessories"),
     Furniture("furniture"),
     Medical("medical"),
     Food("food"),

@@ -9,17 +9,17 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
-import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ExploreProductsAdapter
-import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ParentRecyclerViewAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.MainCategoryViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentCategoryMainBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -37,7 +37,7 @@ class MainCategoryFragment : Fragment(
     private lateinit var specialProductsAdapter : SpecialProductsAdapter
     private lateinit var bestDealsAdapter: BestDealsAdapter
     private lateinit var bestProductAdapter: BestProductAdapter
-    private lateinit var exploreProductsAdapter: ExploreProductsAdapter
+    private lateinit var exploreProductsAdapter: BestProductAdapter
     private val viewModel by viewModels<MainCategoryViewModel>()
 
     override fun onCreateView(
@@ -56,9 +56,27 @@ class MainCategoryFragment : Fragment(
         setupSpecialProductRv()
         setupBestDealsRv()
         setupBestProductsRv()
-
-        //Experimental
         setupExploreProductsRv()
+
+        specialProductsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        bestDealsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        bestProductAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        exploreProductsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable("product", it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.specialProductsLister.productList.collectLatest {
@@ -167,14 +185,8 @@ class MainCategoryFragment : Fragment(
                     val lastItemPosition = lM.findLastCompletelyVisibleItemPosition()
                     val totalItemCount = lM.itemCount
 
-                    Log.d("Recycler View Scrolling",
-                        String.format("Last position %d => Total Count %d\n", lastItemPosition, totalItemCount)
-                    )
-
                     if(lastItemPosition == totalItemCount - 1)
                     {
-                        Log.d("Recycler View Scrolling", "Fetching Products")
-
                         //End of list reached
                         viewModel.specialProductsLister.fetch()
                     }
@@ -226,10 +238,16 @@ class MainCategoryFragment : Fragment(
 
     private fun setupExploreProductsRv()
     {
-        exploreProductsAdapter = ExploreProductsAdapter()
+        exploreProductsAdapter = BestProductAdapter()
         binding.rvExploreProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
             adapter = exploreProductsAdapter
         }
+    }
+
+    override fun onResume()
+    {
+        super.onResume()
+        showBottomNavigation()
     }
 }

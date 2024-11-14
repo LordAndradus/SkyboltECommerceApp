@@ -1,9 +1,15 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
+import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.CURRENCY_SYMBOL
 
 /**
  * Primarily a static class, this handles function calls that are helpful for constructing the app
@@ -79,6 +85,36 @@ class Utilities
 
                 else -> nop()
             }
+        }
+
+        /**
+         * Converts a float to an appropriate decimal form of money, with a the appropriate currency sign (Will change later)
+         *
+         * @param Float The price as a decimal value
+         * @return A monetary representation of the price
+         */
+        @SuppressLint("DefaultLocale") //Suppresses the warning about using default locale. For now we assume everyone is American
+        fun price(p: Float): String
+        {
+            return CURRENCY_SYMBOL + String.format("%.02f", p)
+        }
+
+        /**
+         * Displays the bottom navigation bar when the activity is the shopping activity
+         */
+        fun Fragment.showBottomNavigation()
+        {
+            val bnv = (activity as ShoppingActivity).findViewById<BottomNavigationView>(R.id.BottomNavigator)
+            bnv.visibility = View.VISIBLE
+        }
+
+        /**
+         * Hides the bottom navigation bar when the activity is the shopping activity
+         */
+        fun Fragment.hideBottomNavigation()
+        {
+            val bnv = (activity as ShoppingActivity).findViewById<BottomNavigationView>(R.id.BottomNavigator)
+            bnv.visibility = View.GONE
         }
     }
 }
