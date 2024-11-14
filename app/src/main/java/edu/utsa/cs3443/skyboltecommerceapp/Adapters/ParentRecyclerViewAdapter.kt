@@ -10,7 +10,7 @@ import androidx.viewbinding.ViewBinding
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
 
 abstract class ParentRecyclerViewAdapter<T: ViewBinding>(
-    private val inflateBinding: (LayoutInflater, ViewGroup?, Boolean) -> T,
+    private val inflateBinding: (LayoutInflater) -> T,
 ): RecyclerView.Adapter<ParentRecyclerViewAdapter<T>.ViewHolder>() {
 
     inner class ViewHolder(val binding: T): RecyclerView.ViewHolder(binding.root)
@@ -41,14 +41,9 @@ abstract class ParentRecyclerViewAdapter<T: ViewBinding>(
     lateinit var view: T
     lateinit var vh: ParentRecyclerViewAdapter<T>.ViewHolder
 
-    fun getGenericType(): T
-    {
-        return view
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
-        view = inflateBinding(LayoutInflater.from((parent.context)), parent, false)
+        view = inflateBinding(LayoutInflater.from((parent.context)))
         vh = ViewHolder(view)
         return vh
     }

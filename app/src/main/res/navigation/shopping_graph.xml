@@ -25,4 +25,9 @@
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_shopping_profile"/>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProductDetailsFragment"
+        android:label="ProductDetailsFragment"
+        tools:layout="@layout/fragment_shopping_product_details"/>
 </navigation>
