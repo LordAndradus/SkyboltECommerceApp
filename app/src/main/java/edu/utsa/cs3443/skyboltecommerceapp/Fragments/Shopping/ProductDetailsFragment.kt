@@ -6,16 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ColorsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SizesAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ViewPager2Images
+import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
+import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.hideBottomNavigation
+import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.DetailsViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentShoppingProductDetailsBinding
+import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class ProductDetailsFragment: Fragment()
 {
     private val args by navArgs<ProductDetailsFragmentArgs>()
@@ -23,6 +31,9 @@ class ProductDetailsFragment: Fragment()
     private val viewPagerAdapter by lazy { ViewPager2Images() }
     private val sizesAdapter by lazy { SizesAdapter() }
     private val colorsAdapter by lazy { ColorsAdapter() }
+    private var selectedColor: Int ?= null
+    private var selectedSize: String ?= null
+    private val viewModel by viewModels<DetailsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +58,44 @@ class ProductDetailsFragment: Fragment()
 
         binding.ImageBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        sizesAdapter.onItemClick = {
+            selectedSize = it
+        }
+
+        colorsAdapter.onItemClick = {
+            selectedColor = it
+        }
+
+        binding.AddToCart.setOnClickListener {
+            if(selectedSize == null || selectedColor == null)
+            {
+                if(selectedSize == null) Utilities.showToast(requireContext(), "You must select a size!")
+                if(selectedColor == null) Utilities.showToast(requireContext(), "You must select a color!")
+                return@setOnClickListener
+            }
+
+            viewModel.addUpdateProductInCart(CartProduct(product, 1, selectedColor, selectedSize))
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.addToCart.collectLatest {
+                Utilities.ResourceOperation(it,
+                    {
+                        binding.AddToCart.startAnimation()
+                    },
+                    {
+                        binding.AddToCart.revertAnimation()
+                        binding.AddToCart.setBackgroundColor(resources.getColor(R.color.teal_200))
+                        binding.AddToCart.text = "Successfully added to cart!"
+                        //Move to cart
+                    },
+                    {
+                        binding.AddToCart.stopAnimation()
+                        Utilities.showToast(requireContext(), it.message.toString())
+                    })
+            }
         }
 
         binding.apply {

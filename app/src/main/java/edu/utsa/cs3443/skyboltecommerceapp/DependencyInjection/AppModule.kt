@@ -4,11 +4,13 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import edu.utsa.cs3443.skyboltecommerceapp.Firebase.FirebaseCommon
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.INTRODUCTION_SHARED_PREFERENCES
 import javax.inject.Singleton
@@ -49,4 +51,11 @@ object AppModule
     fun provideIntroductionSP(
         application: Application
     ) = application.getSharedPreferences(INTRODUCTION_SHARED_PREFERENCES, MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseCommon(
+        firebaseAuthenticator: FirebaseAuth,
+        firestore: FirebaseFirestore
+    ) = FirebaseCommon(firestore, firebaseAuthenticator)
 }
