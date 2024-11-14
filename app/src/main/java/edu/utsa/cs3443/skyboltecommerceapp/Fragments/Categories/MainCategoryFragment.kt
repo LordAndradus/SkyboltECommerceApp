@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
@@ -50,7 +52,7 @@ class MainCategoryFragment : Fragment(
 
         setupSpecialProductRv()
         setupBestDealsRv()
-        setupBaseProductsRv()
+        setupBestProductsRv()
 
         lifecycleScope.launchWhenStarted {
             viewModel.specialProducts.collectLatest {
@@ -92,19 +94,27 @@ class MainCategoryFragment : Fragment(
             viewModel.bestProducts.collectLatest {
                 Utilities.ResourceOperation(it,
                     {
-                        showLoading()
+                        binding.BestProductsLoadingProgressBar.visibility = View.VISIBLE
                     },
                     {
                         bestProductAdapter.differ.submitList(it.data)
-                        hideLoading()
+                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
                     },
                     {
-                        hideLoading()
+                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
                         Log.e(TAG, it.message.toString())
                         Utilities.showToast(requireContext(), it.message.toString())
                     })
             }
         }
+
+        binding.NestedScrollCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { view, _, scrollY, scrollX, _ ->
+            if(view.getChildAt(0).bottom <= view.height + scrollY)
+            {
+                //We reached the bottom of the scroll view
+                viewModel.fetchBestProducts()
+            }
+        })
     }
 
     private fun showLoading()
@@ -123,10 +133,33 @@ class MainCategoryFragment : Fragment(
         binding.rvSpecialProducts.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = specialProductsAdapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)
+                {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val lM = (layoutManager as LinearLayoutManager)
+                    val lastItemPosition = lM.findLastCompletelyVisibleItemPosition()
+                    val totalItemCount = lM.itemCount
+
+                    Log.d("Recycler View Scrolling",
+                        String.format("Last position %d => Total Count %d\n", lastItemPosition, totalItemCount)
+                    )
+
+                    if(lastItemPosition == totalItemCount - 1)
+                    {
+                        Log.d("Recycler View Scrolling", "Fetching Products")
+
+                        //End of list reached
+                        viewModel.fetchSpecialProducts()
+                    }
+                }
+            })
         }
     }
 
-    private fun setupBaseProductsRv()
+    private fun setupBestProductsRv()
     {
         bestProductAdapter = BestProductAdapter()
         binding.rvBestProducts.apply {

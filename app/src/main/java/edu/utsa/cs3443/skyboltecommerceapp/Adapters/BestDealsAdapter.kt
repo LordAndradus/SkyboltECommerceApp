@@ -1,6 +1,7 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Adapters;
 
 import android.annotation.SuppressLint
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -25,6 +26,7 @@ class BestDealsAdapter: RecyclerView.Adapter<BestDealsAdapter.ViewHolder>()
                     tvNewPrice.text = "$${String.format("%.02f", priceFinal)}"
                 }
                 tvOldPrice.text =  "$${product.price}"
+                tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 tvDealProductName.text = product.name
             }
         }

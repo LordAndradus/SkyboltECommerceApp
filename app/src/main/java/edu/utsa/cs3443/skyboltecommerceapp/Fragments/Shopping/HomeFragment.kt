@@ -10,6 +10,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.Adapters.HomeViewpagerAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.AccessoriesFragment
 import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.ElectronicsFragment
 import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.FashionFragment
+import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.FoodFragment
 import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.FurnitureFragment
 import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.MainCategoryFragment
 import edu.utsa.cs3443.skyboltecommerceapp.Fragments.Categories.MedicalFragment
@@ -47,6 +48,7 @@ class HomeFragment : Fragment(
             AccessoriesFragment(),
             FurnitureFragment(),
             MedicalFragment(),
+            FoodFragment(),
             PetsFragment()
         )
 
@@ -58,13 +60,14 @@ class HomeFragment : Fragment(
         TabLayoutMediator(binding.TabLayout, binding.ViewpagerHome) { tab, position ->
             when(position)
             {
-                0 -> tab.text = "Main"
+                0 -> tab.text = "Home"
                 1 -> tab.text = "Fashion"
                 2 -> tab.text = "Electronics"
                 3 -> tab.text = "Accessories"
                 4 -> tab.text = "Furniture"
                 5 -> tab.text = "Medical"
-                6 -> tab.text = "Pets"
+                6 -> tab.text = "Food"
+                7 -> tab.text = "Pets"
             }
         }.attach()
     }

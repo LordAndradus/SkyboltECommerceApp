@@ -81,16 +81,16 @@
         android:id="@+id/TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/HomeHeader"
+        app:tabIndicator="@null"
+        app:tabMode="scrollable"
         app:tabRippleColor="@color/white"
         app:tabSelectedTextColor="@color/black"
-        app:tabMode="scrollable"
-        app:tabTextAppearance="@style/tabLayout_Text"
-        app:layout_constraintTop_toBottomOf="@id/HomeHeader"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"
-        app:tabIndicator="@null"
-        />
+        app:tabTextAppearance="@style/tabLayout_Text" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/ViewpagerHome"
