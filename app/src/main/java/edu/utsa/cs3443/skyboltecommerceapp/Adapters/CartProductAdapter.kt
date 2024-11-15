@@ -13,11 +13,11 @@ import com.bumptech.glide.Glide
 import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.getProductPrice
-import edu.utsa.cs3443.skyboltecommerceapp.databinding.CartProductItemBinding
+import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvCartProductItemBinding
 
 class CartProductAdapter: RecyclerView.Adapter<CartProductAdapter.ViewHolder>()
 {
-    inner class ViewHolder(val binding: CartProductItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: RvCartProductItemBinding): RecyclerView.ViewHolder(binding.root)
     {
         @SuppressLint("DefaultLocale")
         fun bind(cartProduct: CartProduct)
@@ -63,7 +63,7 @@ class CartProductAdapter: RecyclerView.Adapter<CartProductAdapter.ViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
         return ViewHolder(
-            CartProductItemBinding.inflate(
+            RvCartProductItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

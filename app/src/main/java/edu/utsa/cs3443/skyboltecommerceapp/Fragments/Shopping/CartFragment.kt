@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.CartProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Firebase.FirebaseCommon
 import edu.utsa.cs3443.skyboltecommerceapp.R
@@ -44,10 +43,13 @@ class CartFragment : Fragment(
 
         setupCartRV()
 
+        var totalPrice = 0f
+
         lifecycleScope.launchWhenStarted {
             viewModel.productsPrice.collectLatest { price ->
                 price?.let {
-                    binding.tvTotalPrice.text = Utilities.price(price as Float)
+                    totalPrice = (price as Float)
+                    binding.tvTotalPrice.text = Utilities.price(price)
                 }
             }
         }
@@ -63,6 +65,11 @@ class CartFragment : Fragment(
 
         cartAdapter.onRemoveClick = {
             viewModel.changeQuantity(it, FirebaseCommon.QuantityChanging.DECREASED)
+        }
+
+        binding.finishCheckout.setOnClickListener {
+            val action = CartFragmentDirections.actionCartFragmentToBillingFragment(totalPrice, cartAdapter.differ.currentList.toTypedArray())
+            findNavController().navigate(action)
         }
 
         lifecycleScope.launchWhenStarted {

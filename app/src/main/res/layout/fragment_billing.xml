@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="25dp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="sans-serif"
                     android:text="Billing"
                     android:textColor="@color/black"
                     android:textSize="20sp"
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Payment Methods"
-            android:fontFamily="@font/poppins_thin"
+            android:fontFamily="sans-serif"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/toolbarBilling"
             app:layout_constraintStart_toStartOf="@id/guideline1"
@@ -63,8 +63,8 @@
             android:id="@+id/tvPaymentExplanation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Keline dose not support virtual payments. You can pay when you receive your order."
-            android:fontFamily="@font/sf_pro_display"
+            android:text="Skybolt Inc. will ask for your payment details upon successfully setting up your first package for shipping!"
+            android:fontFamily="sans-serif-black"
             app:layout_constraintTop_toBottomOf="@id/tvPaymentMethods"
             app:layout_constraintStart_toStartOf="@id/guideline1"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Shipping Address"
-            android:fontFamily="@font/poppins_thin"
+            android:fontFamily="sans-serif"
             app:layout_constraintStart_toStartOf="@id/guideline1"
             android:textColor="@color/black"
             android:textSize="15sp"
@@ -123,7 +123,7 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/address_rv_item"/>
+                tools:listitem="@layout/rv_address_item"/>
 
             <ProgressBar
                 android:id="@+id/progressbarAddress"
@@ -156,7 +156,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@id/guideline1"
             app:layout_constraintTop_toBottomOf="@id/middleLine"
-            tools:listitem="@layout/billing_products_rv_item"
+            tools:listitem="@layout/rv_billing_products_item"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
@@ -189,7 +189,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:fontFamily="@font/sf_pro_display"
+                android:fontFamily="sans-serif-black"
                 android:text="Total"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -205,8 +205,8 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="15dp"
-                android:fontFamily="@font/sf_pro_display"
-                android:text="$150"
+                android:fontFamily="sans-serif-black"
+                android:text="$420.69"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -216,7 +216,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+        <com.github.leandroborgesferreira.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/buttonPlaceOrder"
             android:layout_width="0dp"
             android:layout_height="@dimen/mediumButtonHeight"

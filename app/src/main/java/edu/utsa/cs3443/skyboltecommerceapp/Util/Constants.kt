@@ -9,8 +9,11 @@ package edu.utsa.cs3443.skyboltecommerceapp.Util
  */
 object Constants
 {
-    const val USER_COLLECTION = "user"
     const val PRODUCT_COLLECTION = "products"
+
+    const val ORDER_COLLECTION = "orders" //Both a sub collection and normal collection
+
+    const val USER_COLLECTION = "user"
     const val ADDRESS_SUBCOLLECTION = "address"
     const val CART_SUBCOLLECTION = "cart"
 
@@ -29,7 +32,6 @@ object Constants
  */
 enum class Categories(val category: String)
 {
-    Special("special product"),
     Fashion("fashion"),
     Electronics("electronics"),
     Accessories("accessories"),

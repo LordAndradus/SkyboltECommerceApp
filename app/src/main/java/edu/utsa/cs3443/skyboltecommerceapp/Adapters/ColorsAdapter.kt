@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import edu.utsa.cs3443.skyboltecommerceapp.databinding.ColorRvItemBinding
+import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvColorItemBinding
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.ViewpagerImageItemBinding
 
 class ColorsAdapter: RecyclerView.Adapter<ColorsAdapter.ViewHolder>()
 {
     private var selectedPosition = -1
 
-    inner class ViewHolder(val binding: ColorRvItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: RvColorItemBinding): RecyclerView.ViewHolder(binding.root)
     {
         fun bind(color: Int, position: Int)
         {
@@ -60,7 +60,7 @@ class ColorsAdapter: RecyclerView.Adapter<ColorsAdapter.ViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
         return ViewHolder(
-            ColorRvItemBinding.inflate(
+            RvColorItemBinding.inflate(
                 LayoutInflater.from(parent.context)
             )
         )

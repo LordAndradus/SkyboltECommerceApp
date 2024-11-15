@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import edu.utsa.cs3443.skyboltecommerceapp.databinding.SizeRvItemBinding
+import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvSizeItemBinding
 
 class SizesAdapter: RecyclerView.Adapter<SizesAdapter.ViewHolder>()
 {
     private var selectedPosition = -1
 
-    inner class ViewHolder(val binding: SizeRvItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: RvSizeItemBinding): RecyclerView.ViewHolder(binding.root)
     {
         fun bind(size: String, position: Int)
         {
@@ -53,7 +53,7 @@ class SizesAdapter: RecyclerView.Adapter<SizesAdapter.ViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
         return ViewHolder(
-            SizeRvItemBinding.inflate(
+            RvSizeItemBinding.inflate(
                 LayoutInflater.from(parent.context)
             )
         )
