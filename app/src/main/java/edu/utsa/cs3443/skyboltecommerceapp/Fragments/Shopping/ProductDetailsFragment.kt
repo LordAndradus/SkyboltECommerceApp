@@ -69,10 +69,10 @@ class ProductDetailsFragment: Fragment()
         }
 
         binding.AddToCart.setOnClickListener {
-            if(selectedSize == null || selectedColor == null)
+            if((selectedSize == null && sizesAdapter.itemCount != 0) || (selectedColor == null && colorsAdapter.itemCount != 0))
             {
-                if(selectedSize == null) Utilities.showToast(requireContext(), "You must select a size!")
-                if(selectedColor == null) Utilities.showToast(requireContext(), "You must select a color!")
+                if(selectedColor == null && colorsAdapter.itemCount != 0) Utilities.showToast(requireContext(), "You must select a color!")
+                if(selectedSize == null && sizesAdapter.itemCount != 0) Utilities.showToast(requireContext(), "You must select a size!")
                 return@setOnClickListener
             }
 

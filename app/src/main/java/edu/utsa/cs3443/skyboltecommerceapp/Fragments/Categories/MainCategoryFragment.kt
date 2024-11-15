@@ -18,6 +18,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.MainCategoryViewModel
@@ -59,22 +60,22 @@ class MainCategoryFragment : Fragment(
         setupExploreProductsRv()
 
         specialProductsAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("product", it) }
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 
         bestDealsAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("product", it) }
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 
         bestProductAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("product", it) }
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 
         exploreProductsAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("product", it) }
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 

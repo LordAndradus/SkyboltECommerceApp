@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.CategoryViewModel
@@ -45,12 +46,12 @@ open class ParentCategoryFragment () : Fragment(
         setupProductRV()
 
         offerAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("product", it) }
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 
         bestProductAdapter.onClick = {
-            val b = Bundle().apply { putParcelable("product", it) }
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
     }

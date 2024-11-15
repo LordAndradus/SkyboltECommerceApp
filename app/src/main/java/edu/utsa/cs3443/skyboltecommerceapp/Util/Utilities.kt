@@ -116,5 +116,14 @@ class Utilities
             val bnv = (activity as ShoppingActivity).findViewById<BottomNavigationView>(R.id.BottomNavigator)
             bnv.visibility = View.GONE
         }
+
+        fun Float?.getProductPrice(price: Float): Float
+        {
+            if(this == null) return price
+            val percentage = 1f - this
+            val finalPrice = price * percentage
+
+            return finalPrice
+        }
     }
 }

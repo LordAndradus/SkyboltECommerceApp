@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Product
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.getProductPrice
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvProductItemBinding
 
 class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.ViewHolder>()
@@ -23,8 +24,7 @@ class BestProductAdapter : RecyclerView.Adapter<BestProductAdapter.ViewHolder>()
             binding.apply {
                 Glide.with(itemView).load(product.images[0]).into(imgProduct)
                 product.offerPercentage?.let {
-                    val remainingPricePercentage = 1 - it
-                    val priceFinal = remainingPricePercentage * product.price
+                    val priceFinal = product.offerPercentage.getProductPrice(product.price)
                     tvNewPrice.text = Utilities.price(priceFinal)
                     tvPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 }

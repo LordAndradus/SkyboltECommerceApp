@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shopping_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/addressFragment">
 
     <fragment
         android:id="@+id/cartFragment"
@@ -36,7 +36,11 @@
         android:id="@+id/profileFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_shopping_profile"/>
+        tools:layout="@layout/fragment_shopping_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+    </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProductDetailsFragment"
@@ -46,4 +50,9 @@
             android:name="product"
             app:argType="edu.utsa.cs3443.skyboltecommerceapp.Data.Product" />
     </fragment>
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.AddressFragment"
+        android:label="AddressFragment"
+        tools:layout="@layout/fragment_address"/>
 </navigation>
