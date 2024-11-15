@@ -19,6 +19,8 @@ object Constants
 
     const val PRODUCT = "product"
 
+    const val USER_PFP = "profile images"
+
     const val INTRODUCTION_SHARED_PREFERENCES = "IntroductionSP"
     const val INTRODUCTION_KEY = "IntroductionKey"
 

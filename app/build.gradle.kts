@@ -104,6 +104,9 @@ dependencies {
 
     //Google play services
     implementation("com.google.android.gms:play-services:12.0.1")
+
+    //Coroutines with firebase teehee
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.1")
 }
 
 kapt{

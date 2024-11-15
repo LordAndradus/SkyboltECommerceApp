@@ -63,14 +63,12 @@ class LoginFragment : Fragment(
             }
 
             binding.ForgotLoginPassword.setOnClickListener {
-                Log.d(TAG, "User wants to reset their password")
                 setupBottomSheetDialog { Email ->
                     _ViewModel.ResetPassword(Email)
                 }
             }
 
             binding.RegisterHere.setOnClickListener {
-                Log.d(TAG, "User wants to register instead")
                 findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
             }
 

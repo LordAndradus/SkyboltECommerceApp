@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shopping_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/ordersFragment">
 
     <fragment
         android:id="@+id/cartFragment"
@@ -39,10 +39,16 @@
         android:id="@+id/profileFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_shopping_profile">
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_addressFragment"
             app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_userAccountFragment"
+            app:destination="@id/userAccountFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"
@@ -72,5 +78,28 @@
         <argument
             android:name="product"
             app:argType="edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/userAccountFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Settings.UserAccountFragment"
+        android:label="UserAccountFragment"
+        tools:layout="@layout/fragment_user_account"/>
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Settings.AllOrdersFragment"
+        android:label="OrdersFragment"
+        tools:layout="@layout/fragment_orders">
+        <action
+            android:id="@+id/action_ordersFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Settings.OrderDetailFragment"
+        android:label="OrderDetailFragment"
+        tools:layout="@layout/fragment_order_detail">
+        <argument
+            android:name="order"
+            app:argType="edu.utsa.cs3443.skyboltecommerceapp.Data.Order" />
     </fragment>
 </navigation>

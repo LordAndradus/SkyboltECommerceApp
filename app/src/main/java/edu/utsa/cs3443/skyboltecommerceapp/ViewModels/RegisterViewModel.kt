@@ -1,13 +1,10 @@
 package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
 import androidx.lifecycle.ViewModel
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegisterFieldState
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
@@ -58,7 +55,7 @@ class RegisterViewModel @Inject constructor(
                 _register.emit(Resource.Loading())
             }
 
-            FirebaseAuthenticator.createUserWithEmailAndPassword(user.Email, password)
+            FirebaseAuthenticator.createUserWithEmailAndPassword(user.email, password)
                 .addOnSuccessListener {
                     it.user?.let {
                         SaveUserInformation(it.uid, user)
@@ -70,10 +67,10 @@ class RegisterViewModel @Inject constructor(
         else
         {
             val rfs = RegisterFieldState(
-                ValidateEmail(user.Email),
+                ValidateEmail(user.email),
                 ValidatePassword(password),
-                ValidateFirstName(user.FirstName),
-                ValidateLastName(user.LastName)
+                ValidateFirstName(user.firstName),
+                ValidateLastName(user.lastName)
             )
 
             runBlocking {
@@ -115,10 +112,10 @@ class RegisterViewModel @Inject constructor(
      */
     private fun CheckValidation(user: User, password: String) : Boolean
     {
-        val EmailValidated = ValidateEmail(user.Email)
+        val EmailValidated = ValidateEmail(user.email)
         val PasswordValidated = ValidatePassword(password)
-        val FirstNameValidated = ValidateFirstName(user.FirstName)
-        val LastNameValidated = ValidateLastName(user.LastName)
+        val FirstNameValidated = ValidateFirstName(user.firstName)
+        val LastNameValidated = ValidateLastName(user.lastName)
 
         return EmailValidated is RegistrationValidator.Success
                 && PasswordValidated is RegistrationValidator.Success
