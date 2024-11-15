@@ -18,6 +18,7 @@ class ProfileViewModel @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val authenticator: FirebaseAuth
 ): ViewModel() {
+
     private val _user = MutableStateFlow<Resource<User>>(Resource.Idle())
     val user = _user.asStateFlow()
 
@@ -49,5 +50,10 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+    }
+
+    fun logout()
+    {
+        authenticator.signOut()
     }
 }
