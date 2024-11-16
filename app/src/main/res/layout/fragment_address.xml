@@ -160,7 +160,8 @@
         android:hint="Phone"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:phoneNumber="true"
+        android:inputType="phone"
+        android:maxLength="16"
         android:singleLine="true"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -181,7 +182,7 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonDelelte"
+            android:id="@+id/buttonDelete"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginBottom="20dp"

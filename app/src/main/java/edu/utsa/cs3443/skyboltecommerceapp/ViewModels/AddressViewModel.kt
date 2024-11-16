@@ -1,19 +1,14 @@
 package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Address
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.ADDRESS_SUBCOLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,40 +17,110 @@ class AddressViewModel @Inject constructor(
     private val authenticator: FirebaseAuth
 ): ViewModel() {
 
-    private val _addNewAddress = MutableStateFlow<Resource<Address>>(Resource.Idle())
-    val addNewAddress = _addNewAddress.asStateFlow()
+    val addressHandler = ResourceSignaler<Address>(this)
+    val addressCollection = ResourceSignaler<List<Address>>(this)
 
-    private val _error = MutableSharedFlow<String>()
-    val error = _error.asSharedFlow()
+    var addressDocuments = emptyList<DocumentSnapshot>()
+    var userID: String = ""
+
+    init {
+        userID = authenticator.uid!!
+        retrieveAddressSnapshots()
+    }
+
+    private fun retrieveAddressSnapshots()
+    {
+        addressHandler.start()
+
+        firestore.collection(USER_COLLECTION).document(userID)
+            .collection(ADDRESS_SUBCOLLECTION)
+            .addSnapshotListener { address, e ->
+                if(e != null || address == null)
+                {
+                    if(e != null) addressHandler.error(e.message.toString())
+                    if(address == null) addressHandler.error("No addresses found!")
+
+                    return@addSnapshotListener
+                }
+
+                addressDocuments = address.documents
+                addressCollection.success(address.toObjects(Address::class.java))
+            }
+    }
+
+    fun setAddress(oldAddress: Address, address: Address)
+    {
+        val index = addressCollection.signal.value.data?.indexOf(oldAddress)
+        addressHandler.start()
+
+        if(addressHandler.isLoading())
+        {
+            return
+        }
+
+        addressHandler.start()
+
+        if(index != null)
+        {
+            val addrDocRef = addressDocuments[index].id
+
+            firestore.collection(USER_COLLECTION).document(userID)
+                .collection(ADDRESS_SUBCOLLECTION).document(addrDocRef).set(address)
+                .addOnSuccessListener {
+                    retrieveAddressSnapshots()
+                }
+                .addOnFailureListener {
+                    addressCollection.error("Failed to set address!")
+                }
+        }
+    }
 
     fun addAddress(address: Address)
     {
         val validateInputs = validateInputs(address)
 
-        if(validateInputs)
+        if(!validateInputs)
         {
-            viewModelScope.launch {
-                _addNewAddress.emit(Resource.Loading())
-            }
+            addressHandler.error("All fields are required!")
+            return
+        }
 
-            firestore.collection(USER_COLLECTION).document(authenticator.uid!!)
-                .collection(ADDRESS_SUBCOLLECTION).document().set(address)
+        addressHandler.start()
+
+        firestore.collection(USER_COLLECTION).document(userID)
+            .collection(ADDRESS_SUBCOLLECTION).document().set(address)
+            .addOnSuccessListener {
+                addressHandler.success(address)
+            }
+            .addOnFailureListener {
+                addressHandler.error(it)
+            }
+    }
+
+    fun deleteAddress(address: Address)
+    {
+        val index = addressCollection.signal.value.data?.indexOf(address)
+        addressHandler.start()
+
+        if(addressHandler.isLoading())
+        {
+            return
+        }
+
+        addressHandler.start()
+
+        if(index != null)
+        {
+            val addrDocRef = addressDocuments[index].id
+
+            firestore.collection(USER_COLLECTION).document(userID)
+                .collection(ADDRESS_SUBCOLLECTION).document(addrDocRef).delete()
                 .addOnSuccessListener {
-                    viewModelScope.launch {
-                        _addNewAddress.emit(Resource.Success(address))
-                    }
+                    retrieveAddressSnapshots()
                 }
                 .addOnFailureListener {
-                    viewModelScope.launch {
-                        _addNewAddress.emit(Resource.Error(it.message.toString()))
-                    }
+                    addressCollection.error("Failed to delete address!")
                 }
-        }
-        else
-        {
-            viewModelScope.launch {
-                _error.emit("All fields are required!")
-            }
         }
     }
 

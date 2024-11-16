@@ -1,39 +1,65 @@
 package edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Address
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.PhoneEntry
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.AddressViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentAddressBinding
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddressFragment: Fragment()
 {
     private lateinit var binding: FragmentAddressBinding
     val viewModel by viewModels<AddressViewModel>()
+    val args by navArgs<AddressFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddressBinding.inflate(inflater)
+
+        viewModel.addressHandler.handleScope(this, binding.progressbarAddress,
+            null, {findNavController().navigateUp()}, null)
+
+        viewModel.addressCollection.handleScope(this, null, { Utilities.showToast(requireContext(), "Successfully deleted address!")})
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
+
+        val address = args.address
+
+        if(address == null)
+        {
+            binding.buttonDelete.visibility = View.GONE
+        }
+        else
+        {
+            binding.apply {
+                edAddressTitle.setText(address.addressTitle)
+                edFullName.setText(address.fullName)
+                edStreet.setText(address.street)
+                edState.setText(address.state)
+                edPhone.setText(address.phoneNumber)
+                edCity.setText(address.city)
+                edState.setText(address.state)
+            }
+        }
 
         binding.apply {
             buttonSave.setOnClickListener {
@@ -46,34 +72,42 @@ class AddressFragment: Fragment()
 
                 val address = Address(addressTitle, fullName, street, phone, city, state)
 
-                viewModel.addAddress(address)
+                if(args.address == null)
+                {
+                    viewModel.addAddress(address)
+                }
+                else
+                {
+                    viewModel.setAddress(args.address!!, address)
+                    findNavController().navigateUp()
+                }
             }
-        }
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.addNewAddress.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.progressbarAddress.visibility = View.VISIBLE
-                    },
-                    {
-                        binding.progressbarAddress.visibility = View.INVISIBLE
-                        findNavController().navigateUp()
-                    },
-                    {
-                        binding.progressbarAddress.visibility = View.INVISIBLE
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
+            buttonDelete.setOnClickListener {
+                viewModel.deleteAddress(args.address!!)
+                findNavController().navigateUp()
             }
-        }
 
-        lifecycleScope.launch {
-            viewModel.error.collectLatest {
-                Utilities.showToast(requireContext(), it)
+            edPhone.addTextChangedListener(PhoneEntry(edPhone))
+            edPhone.setOnKeyListener { _, keyCode, event ->
+                if(keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN)
+                {
+                    if(edPhone.text.isEmpty()) return@setOnKeyListener true
+                    if(edPhone.text.toString().length == 2)
+                    {
+                        edPhone.setText("")
+                        return@setOnKeyListener true
+                    }
+                    val currentText: String = edPhone.text.toString().replace("[\\D]".toRegex(), "")
+                    val deleted = currentText.substring(0, currentText.length - 1)
+                    edPhone.setText(deleted)
+
+                    true
+                }
+                else
+                {
+                    false
+                }
             }
         }
     }

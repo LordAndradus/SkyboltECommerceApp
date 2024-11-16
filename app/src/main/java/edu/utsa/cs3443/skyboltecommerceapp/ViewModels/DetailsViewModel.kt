@@ -7,11 +7,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
 import edu.utsa.cs3443.skyboltecommerceapp.Firebase.FirebaseCommon
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.CART_SUBCOLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,14 +19,12 @@ class DetailsViewModel @Inject constructor(
     val authenticator: FirebaseAuth,
     private val firebaseCommon: FirebaseCommon
 ): ViewModel() {
-    private val _addToCart = MutableStateFlow<Resource<CartProduct>>(Resource.Idle())
-    val addToCart = _addToCart.asStateFlow()
+
+    val addToCart = ResourceSignaler<CartProduct>(this)
 
     fun addUpdateProductInCart(cartProduct: CartProduct)
     {
-        viewModelScope.launch {
-            _addToCart.emit(Resource.Loading())
-        }
+        addToCart.start()
 
         firestore.collection(USER_COLLECTION)
             .document(authenticator.uid!!).collection(CART_SUBCOLLECTION)
@@ -58,9 +54,7 @@ class DetailsViewModel @Inject constructor(
                 }
             }
             .addOnFailureListener {
-                viewModelScope.launch {
-                    _addToCart.emit(Resource.Error(it.message.toString()))
-                }
+                addToCart.error(it)
             }
     }
 
@@ -70,11 +64,11 @@ class DetailsViewModel @Inject constructor(
             viewModelScope.launch {
                 if(e == null)
                 {
-                    _addToCart.emit(Resource.Success(addedProduct!!))
+                    addToCart.success(addedProduct!!)
                 }
                 else
                 {
-                    _addToCart.emit(Resource.Error(e.message.toString()))
+                    addToCart.error(e)
                 }
             }
         }
@@ -86,11 +80,11 @@ class DetailsViewModel @Inject constructor(
             viewModelScope.launch {
                 if(e == null)
                 {
-                    _addToCart.emit(Resource.Success(cartProduct))
+                    addToCart.success(cartProduct)
                 }
                 else
                 {
-                    _addToCart.emit(Resource.Error(e.message.toString()))
+                    addToCart.error(e)
                 }
             }
         }

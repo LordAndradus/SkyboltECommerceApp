@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.SkyboltApplication
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_PFP
@@ -20,9 +21,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateEmail
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateFirstName
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateLastName
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
@@ -36,14 +35,11 @@ class UserAccountViewModel @Inject constructor(
     private val storage: StorageReference,
     app: Application
 ): AndroidViewModel(app) {
-    private val _user = MutableStateFlow<Resource<User>>(Resource.Idle())
-    val user = _user.asStateFlow()
-
-    private val _updateInfo = MutableStateFlow<Resource<User>>(Resource.Idle())
-    val updateInfo = _updateInfo.asStateFlow()
-
     private val _resetPassword = MutableSharedFlow<Resource<String>>()
     val resetPassword = _resetPassword.asSharedFlow()
+
+    val userThis = ResourceSignaler<User>(this)
+    val updateInfo = ResourceSignaler<User>(this)
 
     init {
         getUser()
@@ -51,23 +47,17 @@ class UserAccountViewModel @Inject constructor(
 
     fun getUser()
     {
-        viewModelScope.launch {
-            _user.emit(Resource.Loading())
-        }
+        userThis.start()
 
         firestore.collection(USER_COLLECTION).document(authenticator.uid!!).get()
             .addOnSuccessListener {
                 val user = it.toObject(User::class.java)
-                user?.let {
-                    viewModelScope.launch {
-                        _user.emit(Resource.Success(it))
-                    }
+                user?.let { uI ->
+                    userThis.success(uI)
                 }
             }
             .addOnFailureListener {
-                viewModelScope.launch {
-                    _user.emit(Resource.Error(it.message.toString()))
-                }
+                userThis.error(it)
             }
     }
 
@@ -79,16 +69,12 @@ class UserAccountViewModel @Inject constructor(
 
         if(!validUser)
         {
-            viewModelScope.launch {
-                _user.emit(Resource.Error("Check your inputs"))
-            }
+            userThis.error("Check your inputs!")
 
             return
         }
 
-        viewModelScope.launch {
-            _updateInfo.emit(Resource.Loading())
-        }
+        updateInfo.start()
 
         if(imageUri == null)
         {
@@ -116,14 +102,10 @@ class UserAccountViewModel @Inject constructor(
             }
         }
             .addOnSuccessListener {
-                viewModelScope.launch {
-                    _updateInfo.emit(Resource.Success(user))
-                }
+                updateInfo.success(user)
             }
             .addOnFailureListener {
-                viewModelScope.launch {
-                    _updateInfo.emit(Resource.Error(it.message.toString()))
-                }
+                updateInfo.error(it)
             }
     }
 
@@ -148,22 +130,22 @@ class UserAccountViewModel @Inject constructor(
             catch(e: Exception)
             {
                 e.printStackTrace()
-                _user.emit(Resource.Error(e.message.toString()))
+                userThis.error(e)
             }
         }
     }
 
-    fun ResetPassword(Email: String)
+    fun resetPassword(email: String)
     {
         viewModelScope.launch {
             _resetPassword.emit(Resource.Loading())
         }
 
         //Use firebase authentication to send link
-        authenticator.sendPasswordResetEmail(Email)
+        authenticator.sendPasswordResetEmail(email)
             .addOnSuccessListener {
                 viewModelScope.launch {
-                    _resetPassword.emit(Resource.Success(Email))
+                    _resetPassword.emit(Resource.Success(email))
                 }
             }
             .addOnFailureListener {

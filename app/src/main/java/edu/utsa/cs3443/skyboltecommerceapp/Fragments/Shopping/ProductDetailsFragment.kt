@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,6 @@ import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.hideBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.DetailsViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentShoppingProductDetailsBinding
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class ProductDetailsFragment: Fragment()
@@ -79,24 +77,9 @@ class ProductDetailsFragment: Fragment()
             viewModel.addUpdateProductInCart(CartProduct(product, 1, selectedColor, selectedSize))
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.addToCart.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.AddToCart.startAnimation()
-                    },
-                    {
-                        binding.AddToCart.revertAnimation()
-                        binding.AddToCart.setBackgroundColor(resources.getColor(R.color.teal_200))
-                        binding.AddToCart.text = "Successfully added to cart!"
-                        //Move to cart
-                    },
-                    {
-                        binding.AddToCart.stopAnimation()
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
-        }
+        viewModel.addToCart.handleScope(this, binding.AddToCart, null, {
+            binding.AddToCart.setBackgroundColor(resources.getColor(R.color.teal_200))
+        })
 
         binding.apply {
             var percentMult: Float

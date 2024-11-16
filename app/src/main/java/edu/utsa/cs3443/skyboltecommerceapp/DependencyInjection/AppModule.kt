@@ -35,7 +35,6 @@ object AppModule
     @Singleton
     fun provideFirebaseAuth() = FirebaseAuth.getInstance();
 
-
     /**
      * Attach firestore to Dagger Hilt at runtime
      *

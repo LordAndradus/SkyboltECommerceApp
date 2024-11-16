@@ -22,7 +22,6 @@ import edu.utsa.cs3443.skyboltecommerceapp.Dialogs.setupBottomSheetDialog
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.UserAccountViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentUserAccountBinding
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class UserAccountFragment : Fragment()
@@ -47,39 +46,18 @@ class UserAccountFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.user.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        showUserLoading()
-                    },
-                    {
-                        hideUserLoading()
-                        showUserInformation(it.data!!)
-                    },
-                    {
-                        hideUserLoading()
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        viewModel.userThis.handleScope(this, null,
+            { showUserLoading() }, { hideUserLoading() }, { hideUserLoading() })
+        viewModel.userThis.onSuccessIterator = {
+            showUserInformation(it.data!!)
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.updateInfo.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.buttonSave.startAnimation()
-                    },
-                    {
-                        binding.progressbarAccount.visibility = View.INVISIBLE
-                        binding.buttonSave.revertAnimation()
-                        findNavController().navigateUp()
-                    },
-                    {
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
-        }
+        viewModel.updateInfo.handleScope(this, null,
+            {binding.buttonSave.startAnimation()}, {
+                binding.progressbarAccount.visibility = View.INVISIBLE
+                binding.buttonSave.revertAnimation()
+                findNavController().navigateUp()
+            })
 
         //Lifecycle listener when resetting password
         lifecycleScope.launchWhenStarted {
@@ -99,7 +77,7 @@ class UserAccountFragment : Fragment()
 
         binding.tvUpdatePassword.setOnClickListener {
             setupBottomSheetDialog { Email ->
-                viewModel.ResetPassword(Email)
+                viewModel.resetPassword(Email)
             }
         }
 

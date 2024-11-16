@@ -34,6 +34,22 @@ class CartFragment : Fragment(
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShoppingCartBinding.inflate(inflater)
+
+        viewModel.cartProducts.handleScope(this, binding.progressBarCart)
+        viewModel.cartProducts.onSuccessIterator = {
+            if(it.data!!.isEmpty())
+            {
+                showEmptyCart()
+                hideOtherViews()
+            }
+            else
+            {
+                hideEmptyCart()
+                showOtherViews()
+                cartAdapter.differ.submitList(it.data)
+            }
+        }
+
         return binding.root
     }
 
@@ -68,7 +84,7 @@ class CartFragment : Fragment(
         }
 
         binding.finishCheckout.setOnClickListener {
-            val action = CartFragmentDirections.actionCartFragmentToBillingFragment(totalPrice, cartAdapter.differ.currentList.toTypedArray())
+            val action = CartFragmentDirections.actionCartFragmentToBillingFragment(totalPrice, cartAdapter.differ.currentList.toTypedArray(), true)
             findNavController().navigate(action)
         }
 
@@ -88,34 +104,6 @@ class CartFragment : Fragment(
 
                 alertDialog.create()
                 alertDialog.show()
-            }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.cartProducts.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.progressBarCart.visibility = View.VISIBLE
-                    },
-                    {
-                        binding.progressBarCart.visibility = View.INVISIBLE
-
-                        if(it.data!!.isEmpty())
-                        {
-                            showEmptyCart()
-                            hideOtherViews()
-                        }
-                        else
-                        {
-                            hideEmptyCart()
-                            showOtherViews()
-                            cartAdapter.differ.submitList(it.data)
-                        }
-                    },
-                    {
-                        binding.progressBarCart.visibility = View.INVISIBLE
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
             }
         }
     }

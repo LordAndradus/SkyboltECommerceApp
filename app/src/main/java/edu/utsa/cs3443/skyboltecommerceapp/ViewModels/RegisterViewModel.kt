@@ -5,17 +5,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegisterFieldState
 import edu.utsa.cs3443.skyboltecommerceapp.Util.RegistrationValidator
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateEmail
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateFirstName
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateLastName
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidatePassword
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -32,11 +30,10 @@ class RegisterViewModel @Inject constructor(
     private val database: FirebaseFirestore
 ): ViewModel() {
     //We will be using registers here to keep track of how the app is operating, and to react accordingly
-    private val _register = MutableStateFlow<Resource<User>>(Resource.Idle())
-    val register: Flow<Resource<User>> = _register
-
     private val _validation = Channel<RegisterFieldState>()
     val validation = _validation.receiveAsFlow()
+
+    val register = ResourceSignaler<User>(this)
 
     /**
      * A function that first validates all the filled in information.
@@ -51,9 +48,7 @@ class RegisterViewModel @Inject constructor(
     {
         if(CheckValidation(user, password))
         {
-            runBlocking {
-                _register.emit(Resource.Loading())
-            }
+            register.start()
 
             FirebaseAuthenticator.createUserWithEmailAndPassword(user.email, password)
                 .addOnSuccessListener {
@@ -61,7 +56,7 @@ class RegisterViewModel @Inject constructor(
                         SaveUserInformation(it.uid, user)
                     }
                 }.addOnFailureListener{
-                    _register.value = Resource.Error(it.message.toString())
+                    register.error(it)
                 }
         }
         else
@@ -95,10 +90,10 @@ class RegisterViewModel @Inject constructor(
             .document(userUID)
             .set(user)
             .addOnSuccessListener {
-                _register.value = Resource.Success(user)
+                register.success(user)
             }
             .addOnFailureListener {
-                _register.value = Resource.Error(it.message.toString())
+                register.error(it)
             }
     }
 

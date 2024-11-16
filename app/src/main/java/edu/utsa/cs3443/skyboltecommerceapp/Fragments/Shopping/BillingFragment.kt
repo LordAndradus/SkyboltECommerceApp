@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +24,6 @@ import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.BillingViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.OrderViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentBillingBinding
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class BillingFragment: Fragment()
@@ -47,50 +45,21 @@ class BillingFragment: Fragment()
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBillingBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
 
         products = args.product.toList()
         totalPrice = args.totalPrice
 
-        lifecycleScope.launchWhenStarted {
-            billingViewModel.address.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.progressbarAddress.visibility = View.VISIBLE
-                    },
-                    {
-                        addressAdapter.differ.submitList(it.data)
-                        binding.progressbarAddress.visibility = View.INVISIBLE
-                    },
-                    {
-                        binding.progressbarAddress.visibility = View.INVISIBLE
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        billingViewModel.address.handleScope(this, binding.progressbarAddress)
+        billingViewModel.address.onSuccessIterator = {
+            addressAdapter.differ.submitList(it.data)
         }
 
-        lifecycleScope.launchWhenStarted {
-            orderViewModel.order.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.buttonPlaceOrder.startAnimation()
-                    },
-                    {
-                        binding.buttonPlaceOrder.revertAnimation()
-                        findNavController().navigateUp()
-                        Utilities.showSnackbar(requireView(), "Your order has been placed!")
-                    },
-                    {
-                        binding.buttonPlaceOrder.revertAnimation()
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
-        }
+        orderViewModel.orders.handleScope(this, binding.buttonPlaceOrder, null, {
+            findNavController().navigateUp()
+            Utilities.showSnackbar(requireView(), "Your order has been placed!")
+        })
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
@@ -99,6 +68,16 @@ class BillingFragment: Fragment()
 
         setupBillingProductsRv()
         setupAddressRv()
+
+        if(!args.payment)
+        {
+            binding.apply {
+                buttonPlaceOrder.visibility = View.INVISIBLE
+                totalBoxContainer.visibility = View.INVISIBLE
+                middleLine.visibility = View.INVISIBLE
+                bottomLine.visibility = View.INVISIBLE
+            }
+        }
 
         binding.imageCloseBilling.setOnClickListener {
             findNavController().navigateUp()
@@ -113,6 +92,12 @@ class BillingFragment: Fragment()
 
         addressAdapter.onClick = {
             selectedAddress = it
+
+            if(!args.payment)
+            {
+                val b = Bundle().apply { putParcelable("address", selectedAddress) }
+                findNavController().navigate(R.id.action_billingFragment_to_addressFragment, b)
+            }
         }
 
         binding.buttonPlaceOrder.setOnClickListener {
@@ -127,6 +112,11 @@ class BillingFragment: Fragment()
 
     private fun showOrderConfirmationDialog()
     {
+        if(selectedAddress == null)
+        {
+            selectedAddress = addressAdapter.differ.currentList[0]
+        }
+
         val alertDialog = AlertDialog.Builder(requireContext()).apply {
             setTitle("Order items")
             setMessage("Are you sure you want to place your order?")

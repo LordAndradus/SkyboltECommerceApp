@@ -6,16 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.AllOrdersAdapter
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.AllOrdersViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentOrdersBinding
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class AllOrdersFragment: Fragment()
@@ -39,6 +36,16 @@ class AllOrdersFragment: Fragment()
 
         setupOrdersRV()
 
+        viewModel.allOrders.handleScope(this)
+
+        viewModel.allOrders.onSuccessIterator = {
+            ordersAdapter.differ.submitList(it.data)
+            if(it.data.isNullOrEmpty())
+            {
+                binding.tvEmptyOrders.visibility = View.VISIBLE
+            }
+        }
+
         ordersAdapter.onItemClick = {
             val action = AllOrdersFragmentDirections.actionOrdersFragmentToOrderDetailFragment(it)
             findNavController().navigate(action)
@@ -51,31 +58,9 @@ class AllOrdersFragment: Fragment()
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = ordersAdapter
         }
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.allOrders.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.progressbarAllOrders.visibility = View.VISIBLE
-                    },
-                    {
-                        binding.progressbarAllOrders.visibility = View.GONE
-                        ordersAdapter.differ.submitList(it.data)
-                        if(it.data.isNullOrEmpty())
-                        {
-                            binding.tvEmptyOrders.visibility = View.VISIBLE
-                        }
-                    },
-                    {
-                        binding.progressbarAllOrders.visibility = View.GONE
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        binding.imageCloseOrders.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 }

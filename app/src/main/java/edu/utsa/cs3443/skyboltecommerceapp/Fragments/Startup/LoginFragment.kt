@@ -6,13 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.ShoppingActivity
 import edu.utsa.cs3443.skyboltecommerceapp.Dialogs.setupBottomSheetDialog
@@ -38,7 +35,7 @@ class LoginFragment : Fragment(
     R.layout.fragment_login
 ){
     private lateinit var binding : FragmentLoginBinding
-    private val _ViewModel by viewModels<LoginViewModel>()
+    private val viewModel by viewModels<LoginViewModel>()
 
     private val validation = Channel
 
@@ -59,12 +56,12 @@ class LoginFragment : Fragment(
                 val email = EnterEmailHere.text.toString().trim()
                 val password = EnterPasswordHere.text.toString()
 
-                _ViewModel.Login(email, password)
+                viewModel.login(email, password)
             }
 
             binding.ForgotLoginPassword.setOnClickListener {
                 setupBottomSheetDialog { Email ->
-                    _ViewModel.ResetPassword(Email)
+                    viewModel.resetPassword(Email)
                 }
             }
 
@@ -82,54 +79,32 @@ class LoginFragment : Fragment(
             }
         }
 
-        //Lifecycle listener when logging in
-        lifecycleScope.launchWhenStarted {
-            _ViewModel.login.collect() {
-                Utilities.ResourceOperation<FirebaseUser>(it,
-                    {
-                        binding.LoginButton.startAnimation()
-                    },
-                    {
-                        //revert animation to prevent memory leak
-                        binding.LoginButton.revertAnimation()
+        viewModel.login.handleScope(this, null,
+            {binding.LoginButton.startAnimation()}, {
+                binding.LoginButton.revertAnimation()
+                Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
+                    //Pop LoginRegisterActivity from stack
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            }, {binding.LoginButton.revertAnimation()})
 
-                        Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
-                            //Pop LoginRegisterActivity from stack
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity((intent))
-                        }
-                    },
-                    {
-                        binding.LoginButton.revertAnimation()
-                        if(it.message == null || it.message.toString().isEmpty())
-                        {
-                            Toast.makeText(requireContext(), "Password cannot be empty!", Toast.LENGTH_LONG).show()
-                            return@ResourceOperation
-                        }
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-                    })
+        viewModel.login.onFailureIterator = {
+            if(it.message == null || it.message.toString().isEmpty())
+            {
+                Utilities.showSnackbar(requireView(), "Password cannot be empty!")
             }
         }
 
-        //Lifecycle listener when resetting password
-        lifecycleScope.launchWhenStarted {
-            _ViewModel.resetPassword.collect {
-                Utilities.ResourceOperation<String>(it,
-                    {
+        viewModel.resetPassword.handleScope(this, null, null,
+            {Utilities.showSnackbar(requireView(), "Reset link was sent to your email")})
 
-                    },
-                    {
-                        Snackbar.make(requireView(), "Reset link was sent to your email", Snackbar.LENGTH_LONG).show()
-                    },
-                    {
-                        Snackbar.make(requireView(), "ERROR: ${it.message}", Snackbar.LENGTH_LONG).show()
-                    })
-            }
+        viewModel.resetPassword.onFailureIterator = {
+            Utilities.showSnackbar(requireView(), "ERROR: ${it.message}")
         }
 
         //Here we validate each input passed inside, if it fails to validate, then we set the error flag in the EditText field with a message
         lifecycleScope.launchWhenStarted {
-            _ViewModel.validation.collect { validation ->
+            viewModel.validation.collect { validation ->
                 if(validation.email is LoginValidator.Failed)
                 {
                     withContext(Dispatchers.Main) {

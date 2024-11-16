@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,11 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
-import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.CategoryViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentCategoryParentBinding
-import kotlinx.coroutines.flow.collectLatest
 
 /**
  * A base/parent class for Category Fragments to inherit from. Makes the whole process easier
@@ -26,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 open class ParentCategoryFragment () : Fragment(
     R.layout.fragment_category_parent
 ) {
-    private lateinit var binding: FragmentCategoryParentBinding
+    protected lateinit var binding: FragmentCategoryParentBinding
     protected val offerAdapter: BestProductAdapter by lazy { BestProductAdapter() }
     protected val bestProductAdapter: BestProductAdapter by lazy { BestProductAdapter() }
 

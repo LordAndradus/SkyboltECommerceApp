@@ -9,22 +9,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.LoginRegisterActivity
 import edu.utsa.cs3443.skyboltecommerceapp.R
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.ProfileViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentProfileBinding
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(
-    R.layout.fragment_shopping_profile
-) {
+class ProfileFragment : Fragment()
+{
     private lateinit var binding: FragmentProfileBinding
     val viewModel by viewModels<ProfileViewModel>()
 
@@ -32,8 +28,19 @@ class ProfileFragment : Fragment(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater)
+
+        //May or may not have to set the progress bar to GONE
+        viewModel.user.handleScope(this, binding.progressbarSettings)
+        viewModel.user.onSuccessIterator = {
+            Glide.with(requireView()).load(it.data!!.imagePath)
+                .error(ColorDrawable(Color.BLACK))
+                .into(binding.imageUser)
+
+            binding.tvUserName.text = "${it.data.firstName} ${it.data.lastName}"
+        }
+
         return binding.root
     }
 
@@ -50,7 +57,7 @@ class ProfileFragment : Fragment(
         }
 
         binding.linearBilling.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToBillingFragment(0f, emptyArray())
+            val action = ProfileFragmentDirections.actionProfileFragmentToBillingFragment(0f, emptyArray(), false)
             findNavController().navigate(action)
         }
 
@@ -63,33 +70,6 @@ class ProfileFragment : Fragment(
         }
 
         binding.tvVersion.text = "Version 0.5.0"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.user.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.progressbarSettings.visibility = View.VISIBLE
-                    },
-                    {
-                        binding.progressbarSettings.visibility = View.GONE
-                        Glide.with(requireView()).load(it.data!!.imagePath)
-                            .error(ColorDrawable(Color.BLACK))
-                            .into(binding.imageUser)
-
-                        binding.tvUserName.text = "${it.data.firstName} ${it.data.lastName}"
-                    },
-                    {
-                        binding.progressbarSettings.visibility = View.GONE
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
-        }
     }
 
     override fun onResume()

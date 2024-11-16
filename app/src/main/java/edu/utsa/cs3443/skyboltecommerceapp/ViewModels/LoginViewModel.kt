@@ -1,21 +1,16 @@
 package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.Util.LoginFieldState
 import edu.utsa.cs3443.skyboltecommerceapp.Util.LoginValidator
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateLoginEmail
 import edu.utsa.cs3443.skyboltecommerceapp.Util.ValidateLoginPassword
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -25,13 +20,10 @@ private val TAG = "Login Fragment"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val FirebaseAuthenticator: FirebaseAuth
+    private val authenticator: FirebaseAuth
 ) : ViewModel() {
-    private val _login = MutableSharedFlow<Resource<FirebaseUser>>()
-    val login = _login.asSharedFlow()
-
-    private val _resetPassword = MutableSharedFlow<Resource<String>>()
-    val resetPassword = _resetPassword.asSharedFlow()
+    val login = ResourceSignaler<FirebaseUser>(this)
+    val resetPassword = ResourceSignaler<String>(this)
 
     private val _validation = Channel<LoginFieldState>()
     val validation = _validation.receiveAsFlow()
@@ -45,26 +37,22 @@ class LoginViewModel @Inject constructor(
      * @param String Password
      * @return null
      */
-    fun Login(email: String, password: String)
+    fun login(email: String, password: String)
     {
-        if(CheckValidity(email, password))
+        if(checkValidity(email, password))
         {
-            runBlocking {
-                _login.emit(Resource.Loading())
-            }
+            login.start()
 
-            FirebaseAuthenticator.signInWithEmailAndPassword(email, password)
+            authenticator.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     viewModelScope.launch {
                         it.user?.let {
-                            _login.emit(Resource.Success(it))
+                            login.success(it)
                         }
                     }
                 }
                 .addOnFailureListener {
-                    viewModelScope.launch {
-                        _login.emit(Resource.Error(it.message.toString()))
-                    }
+                    login.error(it)
                 }
         }
         else
@@ -81,32 +69,23 @@ class LoginViewModel @Inject constructor(
 
     }
 
-    fun ResetPassword(Email: String)
+    fun resetPassword(Email: String)
     {
-        viewModelScope.launch {
-            _resetPassword.emit(Resource.Loading())
-        }
+        resetPassword.start()
 
         //Use firebase authentication to send link
-        FirebaseAuthenticator.sendPasswordResetEmail(Email)
+        authenticator.sendPasswordResetEmail(Email)
             .addOnSuccessListener {
-                viewModelScope.launch {
-                    _resetPassword.emit(Resource.Success(Email))
-                }
+                resetPassword.success(Email)
             }
             .addOnFailureListener {
-                viewModelScope.launch {
-                    _resetPassword.emit(Resource.Error(it.message.toString()))
-                }
+                resetPassword.error(it)
             }
     }
 
-    fun CheckValidity(email: String, password: String): Boolean
+    private fun checkValidity(email: String, password: String): Boolean
     {
-        val ValidatedEmail = ValidateLoginEmail(email)
-        val ValidatedPassword = ValidateLoginPassword(password)
-
-        return ValidatedEmail is LoginValidator.success
-                && ValidatedPassword is LoginValidator.success
+        return ValidateLoginEmail(email) is LoginValidator.success
+                && ValidateLoginPassword(password) is LoginValidator.success
     }
 }

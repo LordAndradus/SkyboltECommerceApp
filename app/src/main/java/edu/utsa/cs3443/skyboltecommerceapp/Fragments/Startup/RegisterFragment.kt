@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Data.User
 import edu.utsa.cs3443.skyboltecommerceapp.R
@@ -33,7 +32,7 @@ class RegisterFragment : Fragment()
 {
     //The binder takes the Register_Fragment.xml, this is the alternative to R.layout. Thanks dagger hilt!
     private lateinit var binding : FragmentRegisterBinding
-    private val _ViewModel by viewModels<RegisterViewModel>()
+    private val viewModel by viewModels<RegisterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +58,7 @@ class RegisterFragment : Fragment()
 
                 val password : String = Utilities.input(EnterPassword);
 
-                _ViewModel.CreateAccountWithEmailAndPassword(user, password)
+                viewModel.CreateAccountWithEmailAndPassword(user, password)
             }
 
             LoginExists.setOnClickListener{
@@ -76,29 +75,11 @@ class RegisterFragment : Fragment()
             }
         }
 
-        //This is to specifically play an animation based on the state of Firebase, it will update when it reports anything
-        lifecycleScope.launchWhenStarted {
-            _ViewModel.register.collect{
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.RegisterAccountNow.startAnimation()
-                    },
-                    {
-                        Log.d(TAG, it.data.toString())
-                        binding.RegisterAccountNow.revertAnimation();
-                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-                    },
-                    {
-                        Log.e(TAG, it.message.toString())
-                        binding.RegisterAccountNow.revertAnimation();
-                        Snackbar.make(requireView(), "Account with Email already exists!", Snackbar.LENGTH_LONG).show()
-                    })
-            }
-        }
+        viewModel.register.handleScope(this, binding.RegisterAccountNow, null, {findNavController().navigate(R.id.action_registerFragment_to_loginFragment)})
 
         //Here we validate each input passed inside, if it fails to validate, then we set the error flag in the EditText field with a message
         lifecycleScope.launchWhenStarted {
-            _ViewModel.validation.collect { validation ->
+            viewModel.validation.collect { validation ->
                 if(validation.firstname is RegistrationValidator.Failed)
                 {
                     withContext(Dispatchers.Main) {

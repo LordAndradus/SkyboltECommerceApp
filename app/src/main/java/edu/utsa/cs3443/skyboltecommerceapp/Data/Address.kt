@@ -13,4 +13,13 @@ data class Address(
     val state: String
 ): Parcelable {
     constructor(): this ("", "", "" ,"", "", "")
+
+    fun equals(other: Address): Boolean {
+        return addressTitle == other.addressTitle
+                && fullName == other.fullName
+                && street == other.street
+                && phoneNumber == other.phoneNumber
+                && city == other.city
+                && state == other.state
+    }
 }

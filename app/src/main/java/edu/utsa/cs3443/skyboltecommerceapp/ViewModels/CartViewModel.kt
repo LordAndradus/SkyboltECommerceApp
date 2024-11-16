@@ -2,23 +2,19 @@ package edu.utsa.cs3443.skyboltecommerceapp.ViewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
 import edu.utsa.cs3443.skyboltecommerceapp.Firebase.FirebaseCommon
-import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.CART_SUBCOLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.USER_COLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.getProductPrice
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,12 +25,12 @@ class CartViewModel @Inject constructor(
     private val authenticator: FirebaseAuth,
     private val firebaseCommon: FirebaseCommon
 ): ViewModel() {
-    private val _cartProducts = MutableStateFlow<Resource<List<CartProduct>>>(Resource.Idle())
-    val cartProducts = _cartProducts.asStateFlow()
+
+    val cartProducts = ResourceSignaler<List<CartProduct>>(this)
 
     private var cartProductDocuments = emptyList<DocumentSnapshot>()
 
-    val productsPrice = cartProducts.map {
+    val productsPrice = cartProducts.signal.map {
         when(it) {
             is Resource.Success -> {
                 calculatePrice(it.data!!)
@@ -52,26 +48,21 @@ class CartViewModel @Inject constructor(
 
     private fun getCartProducts()
     {
-        viewModelScope.launch {
-            _cartProducts.emit(Resource.Loading())
-        }
+        cartProducts
 
         firestore.collection(USER_COLLECTION).document(authenticator.uid!!).collection(CART_SUBCOLLECTION)
             .addSnapshotListener { value, error ->
-                if(error != null || value == null)
+                if(error != null)
                 {
-                    viewModelScope.launch {
-                        _cartProducts.emit(Resource.Error(error?.message.toString()))
-                    }
+                    cartProducts.error(error.message.toString())
+                    return@addSnapshotListener
                 }
-                else
+
+                if(value != null)
                 {
                     cartProductDocuments = value.documents
-                    val cartProducts = value.toObjects(CartProduct::class.java)
-                    viewModelScope.launch {
-                        _cartProducts.emit(Resource.Success(cartProducts))
-                        Resource.Success(cartProducts)
-                    }
+                    val cartProductsList = value.toObjects(CartProduct::class.java)
+                    cartProducts.success(cartProductsList)
                 }
             }
     }
@@ -92,7 +83,7 @@ class CartViewModel @Inject constructor(
      */
     fun changeQuantity(cartProduct: CartProduct, quantityChanging: FirebaseCommon.QuantityChanging)
     {
-        val index = cartProducts.value.data?.indexOf(cartProduct)
+        val index = cartProducts.signal.value.data?.indexOf(cartProduct)
 
         if(index != null && index >= 0)
         {
@@ -101,7 +92,7 @@ class CartViewModel @Inject constructor(
             when(quantityChanging)
             {
                 FirebaseCommon.QuantityChanging.INCREASED -> {
-                    viewModelScope.launch { _cartProducts.emit(Resource.Loading()) }
+                    cartProducts.start()
                     increaseQuantity(documentID)
                 }
                 FirebaseCommon.QuantityChanging.DECREASED -> {
@@ -113,7 +104,7 @@ class CartViewModel @Inject constructor(
                         return
                     }
 
-                    viewModelScope.launch { _cartProducts.emit(Resource.Loading()) }
+                    cartProducts.start()
                     decreaseQuantity(documentID)
                 }
             }
@@ -125,12 +116,8 @@ class CartViewModel @Inject constructor(
         firebaseCommon.increaseQuantity(documentID) { result, e ->
             if(e != null)
             {
-                viewModelScope.launch {
-                    _cartProducts.emit(Resource.Error(e.message.toString()))
-                }
+                cartProducts.error(e)
             }
-
-
         }
     }
 
@@ -139,18 +126,14 @@ class CartViewModel @Inject constructor(
         firebaseCommon.decreaseQuantity(documentID) { result, e ->
             if(e != null)
             {
-                viewModelScope.launch {
-                    _cartProducts.emit(Resource.Error(e.message.toString()))
-                }
+                cartProducts.error(e)
             }
-
-
         }
     }
 
     fun deleteCartProduct(cartProduct: CartProduct)
     {
-        val index = cartProducts.value.data?.indexOf(cartProduct)
+        val index = cartProducts.signal.value.data?.indexOf(cartProduct)
         if(index != null && index >= 0)
         {
             val documentID = cartProductDocuments[index].id

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +39,7 @@ class OrderDetailFragment: Fragment()
         setupOrderRV()
 
         binding.apply {
-            tvOrderId.text = "0rder #${order.orderID}"
+            tvOrderId.setText("0rder #${order.orderID}")
 
             stepView.setSteps(
                 mutableListOf(
@@ -49,7 +50,7 @@ class OrderDetailFragment: Fragment()
                 )
             )
 
-            val currentOrderStatus = when(order.orderStatus) {
+            var currentOrderStatus = when(order.orderStatus) {
                 OrderStatus.PLACED -> 0
                 OrderStatus.CONFIRMED -> 1
                 OrderStatus.SHIPPED -> 2
@@ -57,7 +58,19 @@ class OrderDetailFragment: Fragment()
                 else -> 0
             }
 
-            stepView.go(currentOrderStatus, false)
+            if(order.orderStatus == OrderStatus.CANCELLED)
+            {
+                stepView.setSteps(mutableListOf(OrderStatus.CANCELLED.toString().substring(0, 1) + OrderStatus.CANCELLED.toString().substring(1).lowercase()))
+                currentOrderStatus = 0
+            }
+
+            if(order.orderStatus == OrderStatus.RETURNED)
+            {
+                stepView.setSteps(mutableListOf(OrderStatus.RETURNED.toString().substring(0, 1) + OrderStatus.RETURNED.toString().substring(1).lowercase()))
+                currentOrderStatus = 0
+            }
+
+            stepView.go(currentOrderStatus, true)
 
             if(currentOrderStatus == stepView.stepCount - 1)
             {
@@ -80,6 +93,10 @@ class OrderDetailFragment: Fragment()
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = billingAdapter
             addItemDecoration(VerticalItemDecoration())
+        }
+
+        binding.imageCloseOrder.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 }

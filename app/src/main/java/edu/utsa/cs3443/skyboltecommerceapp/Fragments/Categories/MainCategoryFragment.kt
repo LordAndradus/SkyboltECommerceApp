@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
+import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
