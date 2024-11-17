@@ -48,6 +48,7 @@ buildscript{
     repositories{
         google()
         mavenCentral()
+
         @Suppress("DEPRECATION")
         jcenter()
     }
@@ -87,7 +88,8 @@ dependencies {
     implementation(libs.circleimageview)
 
     //View page Indicator
-    implementation(libs.dxslin.viewpagerindicator)
+    //implementation(libs.dxslin.viewpagerindicator) - Deprecated. Only for version 1
+    implementation("com.github.zhpanvip:viewpagerindicator:latestVersion")
 
     //Step Viewer
     implementation(libs.stepview)

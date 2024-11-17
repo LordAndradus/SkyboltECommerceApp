@@ -31,9 +31,9 @@ class AddressFragment: Fragment()
         binding = FragmentAddressBinding.inflate(inflater)
 
         viewModel.addressHandler.handleScope(this, binding.progressbarAddress,
-            null, {findNavController().navigateUp()}, null)
+            null, {findNavController().navigateUp()}, null, true)
 
-        viewModel.addressCollection.handleScope(this, null, { Utilities.showToast(requireContext(), "Successfully deleted address!")})
+        viewModel.addressCollection.handleScope(this, binding.progressbarAddress, { Utilities.showToast(requireContext(), "Successfully deleted address!")})
 
         return binding.root
     }
@@ -85,6 +85,10 @@ class AddressFragment: Fragment()
 
             buttonDelete.setOnClickListener {
                 viewModel.deleteAddress(args.address!!)
+                findNavController().navigateUp()
+            }
+
+            imageAddressClose.setOnClickListener {
                 findNavController().navigateUp()
             }
 

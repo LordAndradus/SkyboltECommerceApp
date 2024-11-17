@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.IntroductionViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentAccountOptionsBinding
 
@@ -28,6 +29,8 @@ class AccountOptionsFragment : Fragment(
 ) {
     private lateinit var binding: FragmentAccountOptionsBinding
     private val viewModel by viewModels<IntroductionViewModel>()
+
+    private var wantsToQuit = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +52,13 @@ class AccountOptionsFragment : Fragment(
             findNavController().navigate(R.id.action_accountOptionsFragment_to_registerFragment)
         }
 
+        wantsToQuit = false
+
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            System.exit(0)
+            if(wantsToQuit) System.exit(0)
+
+            Utilities.showSnackbar(requireView(), "Press back again to exit")
+            wantsToQuit = !wantsToQuit
         }
 
         /*binding.SkipForNowButton.setOnClickListener {

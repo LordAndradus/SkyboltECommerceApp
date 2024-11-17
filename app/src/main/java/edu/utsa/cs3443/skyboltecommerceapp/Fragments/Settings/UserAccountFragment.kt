@@ -92,6 +92,10 @@ class UserAccountFragment : Fragment()
             }
         }
 
+        binding.imageCloseUserAccount.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         binding.imageEdit.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"

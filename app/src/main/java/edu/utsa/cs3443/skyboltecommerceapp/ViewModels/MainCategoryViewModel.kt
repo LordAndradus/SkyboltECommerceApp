@@ -32,7 +32,7 @@ class MainCategoryViewModel @Inject constructor(
     init {
         //Set fetch type
         specialProductsLister.setFetch(ProductLister.FetchParams.WithFilter(2L, "special", true))
-        bestDealsLister.setFetch(ProductLister.FetchParams.WithFilter(2L, "bestDeal", true))
+        bestDealsLister.setFetch(ProductLister.FetchParams.WithFilter(12L, "bestDeal", true))
         bestProductsLister.setFetch(ProductLister.FetchParams.WithFilter(-1L, "bestProduct", true))
         exploreProductsLister.setFetch(ProductLister.FetchParams.WithoutFilter(10L))
     }

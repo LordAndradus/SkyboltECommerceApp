@@ -18,8 +18,8 @@ import edu.utsa.cs3443.skyboltecommerceapp.Data.Address
 import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Order
 import edu.utsa.cs3443.skyboltecommerceapp.Data.OrderStatus
-import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Helper.HorizontalItemDecoration
+import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.BillingViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.OrderViewModel
@@ -156,5 +156,25 @@ class BillingFragment: Fragment()
             adapter = addressAdapter
             addItemDecoration(HorizontalItemDecoration())
         }
+    }
+
+    override fun onResume()
+    {
+        //Reset the view to the currently selected address
+        selectedAddress?.let {
+            var idx = 0
+            for(i in addressAdapter.differ.currentList)
+            {
+                if(i == selectedAddress)
+                {
+                    addressAdapter.notifyItemChanged(idx)
+                    break
+                }
+
+                idx++
+            }
+
+        }
+        super.onResume()
     }
 }

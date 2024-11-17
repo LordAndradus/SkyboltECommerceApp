@@ -42,6 +42,8 @@
             android:text="Chair"
             android:textColor="@color/black"
             android:textSize="15sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/imageCartProduct"
             app:layout_constraintTop_toTopOf="@id/imageCartProduct"

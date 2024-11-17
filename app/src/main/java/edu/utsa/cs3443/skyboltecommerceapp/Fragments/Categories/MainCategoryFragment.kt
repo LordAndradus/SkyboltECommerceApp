@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,6 +20,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Helper.LinearSnapLeft
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.MainCategoryViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentCategoryMainBinding
@@ -39,12 +41,22 @@ class MainCategoryFragment : Fragment(
     private lateinit var exploreProductsAdapter: BestProductAdapter
     val viewModel by viewModels<MainCategoryViewModel>()
 
+    private var wantsToQuit = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCategoryMainBinding.inflate(inflater)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if(wantsToQuit) System.exit(0)
+
+            Utilities.showSnackbar(requireView(), "Press back again to quit")
+            wantsToQuit = !wantsToQuit
+        }
+
         return binding.root
     }
 
@@ -56,6 +68,8 @@ class MainCategoryFragment : Fragment(
         setupBestDealsRv()
         setupBestProductsRv()
         setupExploreProductsRv()
+
+        wantsToQuit = false
 
         specialProductsAdapter.onClick = {
             val b = Bundle().apply { putParcelable(PRODUCT, it) }
