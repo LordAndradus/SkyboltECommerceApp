@@ -51,6 +51,8 @@ buildscript{
 
         @Suppress("DEPRECATION")
         jcenter()
+
+        maven { setUrl("https://jitpack.io") }
     }
 
     dependencies{
@@ -89,7 +91,7 @@ dependencies {
 
     //View page Indicator
     //implementation(libs.dxslin.viewpagerindicator) - Deprecated. Only for version 1
-    implementation("com.github.zhpanvip:viewpagerindicator:latestVersion")
+    implementation("com.github.zhpanvip:viewpagerindicator:1.2.3")
 
     //Step Viewer
     implementation(libs.stepview)

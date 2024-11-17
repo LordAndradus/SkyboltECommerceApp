@@ -2,6 +2,7 @@ package edu.utsa.cs3443.skyboltecommerceapp.Util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -117,6 +118,12 @@ class Utilities
             bnv.visibility = View.GONE
         }
 
+        /**
+         * Helper function that uses a Float to return a Float value
+         *
+         * @param Float The price we want to convert
+         * @return A price that was calculated via the initiating float value
+         */
         fun Float?.getProductPrice(price: Float): Float
         {
             if(this == null) return price
@@ -124,6 +131,15 @@ class Utilities
             val finalPrice = price * percentage
 
             return finalPrice
+        }
+
+        fun getDP(v: Float, context: Context): Float
+        {
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                v,
+                context.resources.displayMetrics
+            )
         }
     }
 }

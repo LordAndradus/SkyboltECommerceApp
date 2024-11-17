@@ -10,6 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
+import com.zhpan.indicator.enums.IndicatorSlideMode
+import com.zhpan.indicator.enums.IndicatorStyle
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.ColorsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SizesAdapter
@@ -58,7 +61,6 @@ class ProductDetailsFragment: Fragment()
 
         setupSizesRv()
         setupColorsRv()
-        setupViewpagerRv()
 
         binding.ImageBack.setOnClickListener {
             showBottomNavigation()
@@ -123,6 +125,8 @@ class ProductDetailsFragment: Fragment()
             sizesAdapter.differ.submitList(it)
             selectedSize = sizesAdapter.differ.currentList[0]
         }
+
+        setupViewpagerRv()
     }
 
     private fun setupSizesRv()
@@ -143,8 +147,36 @@ class ProductDetailsFragment: Fragment()
 
     private fun setupViewpagerRv()
     {
+        val context = requireContext()
+
         binding.apply {
-            ViewpagerProductImages.adapter = viewPagerAdapter
+            productImages.adapter = viewPagerAdapter
+
+            productImagesIndicator.apply {
+                setSliderColor(normalColor = resources.getColor(R.color.black), selectedColor = resources.getColor(R.color.white))
+                setSliderWidth(Utilities.getDP(10f, context))
+                setSliderHeight(Utilities.getDP(5f, context))
+                setSlideMode(IndicatorSlideMode.WORM)
+                setIndicatorStyle(IndicatorStyle.DASH)
+                setPageSize(viewPagerAdapter.itemCount)
+                notifyDataChanged()
+            }
+
+            productImages.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                    productImagesIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                }
+
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    productImagesIndicator.onPageSelected(position)
+                }
+            })
         }
     }
 
