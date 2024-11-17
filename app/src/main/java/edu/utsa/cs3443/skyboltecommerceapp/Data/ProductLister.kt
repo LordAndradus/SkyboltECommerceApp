@@ -4,19 +4,16 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.ResourceSignaler
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT_COLLECTION
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Resource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ProductLister(
     private val model: ViewModel,
     private val firestore: FirebaseFirestore,
-) {
+): ResourceSignaler<List<Product>>(model) {
 
-    private val _productFlow = MutableStateFlow<Resource<List<Product>>>(Resource.Idle())
-    val productList: StateFlow<Resource<List<Product>>> = _productFlow
     private val page: Pager = Pager()
 
     private lateinit var params: FetchParams;
@@ -35,9 +32,7 @@ class ProductLister(
 
         if(!page.isPagingFinished)
         {
-            model.viewModelScope.launch {
-                _productFlow.emit(Resource.Loading())
-            }
+            start()
 
             var limit = -1L
             if(params is FetchParams.WithoutFilter && (params as FetchParams.WithoutFilter).limit != -1L) limit = (params as FetchParams.WithoutFilter).limit
@@ -52,16 +47,13 @@ class ProductLister(
                     model.viewModelScope.launch {
                         page.isPagingFinished = productList == page.oldList
                         page.oldList = productList
-                        _productFlow.emit(Resource.Success(productList))
+                        _signal.emit(Resource.Success(productList))
                     }
                     page.currentPage++
                     Log.d("Fetching", "Current page: ${page.currentPage}")
                 }
                 .addOnFailureListener {
-                    model.viewModelScope.launch {
-                        _productFlow.emit(Resource.Error(it.message.toString()))
-                        Log.e("Fetching", "There was an error fetching: " + it.message.toString())
-                    }
+                    error(it)
                 }
         }
     }

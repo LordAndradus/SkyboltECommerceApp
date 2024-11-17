@@ -94,7 +94,7 @@ class UserAccountViewModel @Inject constructor(
             {
                 val currentUser = transaction.get(documentReference).toObject(User::class.java)
                 val newUser = user.copy(imagePath = currentUser?.imagePath ?: "")
-                transaction.set(documentReference, user)
+                transaction.set(documentReference, newUser)
             }
             else
             {

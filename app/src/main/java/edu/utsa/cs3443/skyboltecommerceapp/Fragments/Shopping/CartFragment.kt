@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.CartProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Firebase.FirebaseCommon
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.VerticalItemDecoration
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
-import edu.utsa.cs3443.skyboltecommerceapp.Util.VerticalItemDecoration
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.CartViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentShoppingCartBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -50,7 +51,35 @@ class CartFragment : Fragment(
             }
         }
 
+        showBottomNavigation()
+
         return binding.root
+    }
+
+    //onCreate is only called once to initialize this fragment
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+
+        //If this was called anywhere else, it will display x amount of dialogs. IE if we leave and come back, it'll be called twice
+        lifecycleScope.launchWhenStarted {
+            viewModel.deleteDialog.collectLatest {
+                val alertDialog = AlertDialog.Builder(requireContext()).apply {
+                    setTitle("Delete item from cart")
+                    setMessage("Do you wish to delete this item from your cart?")
+                    setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    setPositiveButton("Delete") { dialog, _ ->
+                        viewModel.deleteCartProduct(it)
+                        dialog.dismiss()
+                    }
+                }
+
+                alertDialog.create()
+                alertDialog.show()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
@@ -86,25 +115,6 @@ class CartFragment : Fragment(
         binding.finishCheckout.setOnClickListener {
             val action = CartFragmentDirections.actionCartFragmentToBillingFragment(totalPrice, cartAdapter.differ.currentList.toTypedArray(), true)
             findNavController().navigate(action)
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.deleteDialog.collectLatest {
-                val alertDialog = AlertDialog.Builder(requireContext()).apply {
-                    setTitle("Delete item from cart")
-                    setMessage("Do you wish to delete this item from your cart?")
-                    setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    setPositiveButton("Delete") { dialog, _ ->
-                        viewModel.deleteCartProduct(it)
-                        dialog.dismiss()
-                    }
-                }
-
-                alertDialog.create()
-                alertDialog.show()
-            }
         }
     }
 

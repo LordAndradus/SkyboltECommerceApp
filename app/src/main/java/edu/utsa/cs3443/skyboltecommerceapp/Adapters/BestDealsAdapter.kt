@@ -29,6 +29,12 @@ class BestDealsAdapter: RecyclerView.Adapter<BestDealsAdapter.ViewHolder>()
                 tvOldPrice.text =  Utilities.price(product.price)
                 tvOldPrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 tvDealProductName.text = product.name
+
+                progressBarSeeProduct.setOnClickListener {
+                    progressBarSeeProduct.startAnimation()
+                    onButtonClick?.invoke(product)
+                    progressBarSeeProduct.revertAnimation()
+                }
             }
         }
     }
@@ -73,4 +79,5 @@ class BestDealsAdapter: RecyclerView.Adapter<BestDealsAdapter.ViewHolder>()
     }
 
     var onClick: ((Product) -> Unit) ?= null
+    var onButtonClick: ((Product) -> Unit) ?= null
 }

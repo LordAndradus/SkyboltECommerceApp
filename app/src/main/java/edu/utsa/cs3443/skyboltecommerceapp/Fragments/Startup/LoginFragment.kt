@@ -85,6 +85,7 @@ class LoginFragment : Fragment(
                 Intent(requireActivity(), ShoppingActivity::class.java).also { intent ->
                     //Pop LoginRegisterActivity from stack
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
             }, {binding.LoginButton.revertAnimation()})
 

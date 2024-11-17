@@ -30,17 +30,17 @@ class DetailsViewModel @Inject constructor(
             .document(authenticator.uid!!).collection(CART_SUBCOLLECTION)
             .whereEqualTo("product.id", cartProduct.product.id).get()
             .addOnSuccessListener {
-                it.documents.let {
+                it.documents.let { product ->
                     //Add the new product
-                    if(it.isEmpty())
+                    if(product.isEmpty())
                     {
                         addNewProduct(cartProduct)
                     }
                     else
                     {
-                        val product = it.first().toObject(CartProduct::class.java)
+                        val cartP = it.first().toObject(CartProduct::class.java)
                         //Increase quantity of product
-                        if(product!!.areEqualIgnoreQuantity(product, cartProduct))
+                        if(cartP.areEqualIgnoreQuantity(cartP, cartProduct))
                         {
                             val documentID = it.first().id
                             increaseQuantity(documentID, cartProduct)

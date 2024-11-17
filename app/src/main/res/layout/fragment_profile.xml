@@ -355,6 +355,15 @@
             </LinearLayout>
 
 
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/skybolt_ecommerce_logo"
+                app:layout_constraintBottom_toTopOf="@id/tvVersion"
+                app:layout_constraintStart_toStartOf="@id/tvVersion"
+                app:layout_constraintEnd_toEndOf="@id/tvVersion"
+                />
+
             <TextView
                 android:id="@+id/tvVersion"
                 android:layout_width="wrap_content"

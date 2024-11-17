@@ -14,6 +14,12 @@ class ProfileViewModel @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val authenticator: FirebaseAuth
 ): ViewModel() {
+
+    companion object {
+        //To obfuscate the key even further, we can store the third part of the key here
+        val keyPartThree: String = "SmFuZQ=="
+    }
+
     val user = ResourceSignaler<User>(this)
 
     init {

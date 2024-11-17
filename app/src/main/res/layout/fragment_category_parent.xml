@@ -20,12 +20,27 @@
             app:layout_constraintBottom_toBottomOf="@id/rvOffer"
             android:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/tvExploreOurDeals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text="Explore Our Deals!"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvOffer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvExploreOurDeals"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             />

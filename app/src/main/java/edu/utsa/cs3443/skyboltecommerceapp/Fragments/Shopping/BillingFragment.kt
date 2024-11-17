@@ -19,7 +19,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
 import edu.utsa.cs3443.skyboltecommerceapp.Data.Order
 import edu.utsa.cs3443.skyboltecommerceapp.Data.OrderStatus
 import edu.utsa.cs3443.skyboltecommerceapp.R
-import edu.utsa.cs3443.skyboltecommerceapp.Util.HorizontalItemDecoration
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.HorizontalItemDecoration
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.BillingViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.OrderViewModel

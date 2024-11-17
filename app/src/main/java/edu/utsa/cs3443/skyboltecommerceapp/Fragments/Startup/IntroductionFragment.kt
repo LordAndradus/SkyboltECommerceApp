@@ -16,7 +16,6 @@ import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.IntroductionViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.IntroductionViewModel.Companion.SHOPPING_ACTIVITY
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentIntroductionBinding
-import kotlinx.coroutines.flow.collect
 
 /**
  * The introduction page, to introduce users to our app with some catchy phrases

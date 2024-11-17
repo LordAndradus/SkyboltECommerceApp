@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BillingProductsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Data.OrderStatus
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.VerticalItemDecoration
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
-import edu.utsa.cs3443.skyboltecommerceapp.Util.VerticalItemDecoration
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentOrderDetailBinding
 
 class OrderDetailFragment: Fragment()

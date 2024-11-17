@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvColorItemBinding
-import edu.utsa.cs3443.skyboltecommerceapp.databinding.ViewpagerImageItemBinding
 
 class ColorsAdapter: RecyclerView.Adapter<ColorsAdapter.ViewHolder>()
 {
-    private var selectedPosition = -1
+    private var selectedPosition = 0
 
     inner class ViewHolder(val binding: RvColorItemBinding): RecyclerView.ViewHolder(binding.root)
     {
@@ -29,6 +27,10 @@ class ColorsAdapter: RecyclerView.Adapter<ColorsAdapter.ViewHolder>()
                 binding.apply {
                     colorShadow.visibility = View.VISIBLE
                     imagePicked.visibility = View.VISIBLE
+
+                    val isBackgroundDark: Boolean = (1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255) >= 0.5f
+                    if(isBackgroundDark) imagePicked.setColorFilter(Color.WHITE)
+                    else imagePicked.setColorFilter(Color.BLACK)
                 }
             }
             //Color is not selected

@@ -10,7 +10,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvSizeItemBinding
 
 class SizesAdapter: RecyclerView.Adapter<SizesAdapter.ViewHolder>()
 {
-    private var selectedPosition = -1
+    private var selectedPosition = 0
 
     inner class ViewHolder(val binding: RvSizeItemBinding): RecyclerView.ViewHolder(binding.root)
     {

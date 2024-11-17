@@ -31,7 +31,11 @@ class PhoneEntry(private val textEditor: EditText) : TextWatcher {
 
         val formatted = formatPhoneNumber(s.toString().replace("\\D".toRegex(), ""))
 
-        if(formatted.isEmpty()) return
+        if(formatted.isEmpty())
+        {
+            isFormatting = false
+            return
+        }
 
         if(formatted != s.toString())
         {

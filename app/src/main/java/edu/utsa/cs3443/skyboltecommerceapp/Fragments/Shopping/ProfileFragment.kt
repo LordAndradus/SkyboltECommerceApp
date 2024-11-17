@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Activities.LoginRegisterActivity
 import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.ProfileViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentProfileBinding
@@ -59,6 +60,10 @@ class ProfileFragment : Fragment()
         binding.linearBilling.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToBillingFragment(0f, emptyArray(), false)
             findNavController().navigate(action)
+        }
+
+        binding.linearTrackOrder.setOnClickListener {
+            Utilities.showSnackbar(requireView(), "You currently have no parcels awaiting delivery.")
         }
 
         binding.linearLogOut.setOnClickListener {

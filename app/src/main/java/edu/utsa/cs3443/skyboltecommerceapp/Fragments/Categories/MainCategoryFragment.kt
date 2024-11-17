@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,13 +16,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestDealsAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.BestProductAdapter
 import edu.utsa.cs3443.skyboltecommerceapp.Adapters.SpecialProductsAdapter
+import edu.utsa.cs3443.skyboltecommerceapp.Helper.LinearSnapLeft
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Constants.PRODUCT
-import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.MainCategoryViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentCategoryMainBinding
-import kotlinx.coroutines.flow.collectLatest
 
 private val TAG = "Special Product"
 
@@ -39,7 +37,7 @@ class MainCategoryFragment : Fragment(
     private lateinit var bestDealsAdapter: BestDealsAdapter
     private lateinit var bestProductAdapter: BestProductAdapter
     private lateinit var exploreProductsAdapter: BestProductAdapter
-    private val viewModel by viewModels<MainCategoryViewModel>()
+    val viewModel by viewModels<MainCategoryViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +62,16 @@ class MainCategoryFragment : Fragment(
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 
+        specialProductsAdapter.onButtonClick = {
+            viewModel.addProductToCart(it)
+        }
+
         bestDealsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        bestDealsAdapter.onButtonClick = {
             val b = Bundle().apply { putParcelable(PRODUCT, it) }
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
@@ -79,83 +86,31 @@ class MainCategoryFragment : Fragment(
             findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.specialProductsLister.productList.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        showLoading()
-                    },
-                    {
-                        specialProductsAdapter.differ.submitList(it.data)
-                        hideLoading()
-                    },
-                    {
-                        hideLoading()
-                        Log.e(TAG, it.message.toString())
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        viewModel.specialProductsLister.handleScope(this, binding.MainCategoryProgressBar, true)
+        viewModel.specialProductsLister.onSuccessIterator = {
+            specialProductsAdapter.differ.submitList(it.data)
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.bestDealsLister.productList.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        showLoading()
-                    },
-                    {
-                        bestDealsAdapter.differ.submitList(it.data)
-                        hideLoading()
-                    },
-                    {
-                        hideLoading()
-                        Log.e(TAG, it.message.toString())
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        viewModel.bestDealsLister.handleScope(this, binding.MainCategoryProgressBar, true)
+        viewModel.bestDealsLister.onSuccessIterator = {
+            bestDealsAdapter.differ.submitList(it.data)
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.bestProductsLister.productList.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.BestProductsLoadingProgressBar.visibility = View.VISIBLE
-                    },
-                    {
-                        bestProductAdapter.differ.submitList(it.data)
-                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
-                    },
-                    {
-                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
-                        Log.e(TAG, it.message.toString())
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        viewModel.bestProductsLister.handleScope(this, binding.MainCategoryProgressBar, true)
+        viewModel.bestProductsLister.onSuccessIterator = {
+            bestProductAdapter.differ.submitList(it.data)
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.allProductsLister.productList.collectLatest {
-                Utilities.ResourceOperation(it,
-                    {
-                        binding.BestProductsLoadingProgressBar.visibility = View.VISIBLE
-                    },
-                    {
-                        exploreProductsAdapter.differ.submitList(it.data)
-                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
-                    },
-                    {
-                        binding.BestProductsLoadingProgressBar.visibility = View.GONE
-                        Log.e(TAG, it.message.toString())
-                        Utilities.showToast(requireContext(), it.message.toString())
-                    })
-            }
+        viewModel.exploreProductsLister.handleScope(this, binding.MainCategoryProgressBar, true)
+        viewModel.exploreProductsLister.onSuccessIterator = {
+            exploreProductsAdapter.differ.submitList(it.data)
         }
 
         binding.NestedScrollCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { view, _, scrollY, scrollX, _ ->
             if(view.getChildAt(0).bottom <= view.height + scrollY)
             {
                 //We reached the bottom of the scroll view
-                viewModel.allProductsLister.fetch()
+                viewModel.exploreProductsLister.fetch()
             }
         })
     }
@@ -176,6 +131,8 @@ class MainCategoryFragment : Fragment(
         binding.rvSpecialProducts.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = specialProductsAdapter
+            val snapItem = LinearSnapLeft()
+            snapItem.attachToRecyclerView(binding.rvSpecialProducts)
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)
@@ -200,8 +157,10 @@ class MainCategoryFragment : Fragment(
     {
         bestDealsAdapter = BestDealsAdapter()
         binding.rvBestDeals.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = GridLayoutManager(requireContext(), 3, LinearLayoutManager.HORIZONTAL, false)
             adapter = bestDealsAdapter
+            val snapItem = LinearSnapLeft()
+            snapItem.attachToRecyclerView(binding.rvBestDeals)
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)

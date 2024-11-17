@@ -88,22 +88,6 @@ class Utilities
         }
 
         /**
-         * Don't mind this, this is the resource operations call template
-         */
-        /*
-        Utilities.ResourceOperation(it,
-        {
-
-        },
-        {
-
-        },
-        {
-
-        })
-        */
-
-        /**
          * Converts a float to an appropriate decimal form of money, with a the appropriate currency sign (Will change later)
          *
          * @param Float The price as a decimal value

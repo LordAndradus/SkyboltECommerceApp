@@ -18,6 +18,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.Data.CartProduct
 import edu.utsa.cs3443.skyboltecommerceapp.R
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.hideBottomNavigation
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities.Companion.showBottomNavigation
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.DetailsViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.FragmentShoppingProductDetailsBinding
 
@@ -42,10 +43,15 @@ class ProductDetailsFragment: Fragment()
 
         hideBottomNavigation()
 
+        viewModel.addToCart.handleScope(this, binding.AddToCart, null, {
+            binding.AddToCart.setBackgroundColor(resources.getColor(R.color.g_green))
+        }, { binding.AddToCart.setBackgroundColor(resources.getColor(R.color.g_red)) })
+
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 
         val product = args.product
@@ -55,6 +61,7 @@ class ProductDetailsFragment: Fragment()
         setupViewpagerRv()
 
         binding.ImageBack.setOnClickListener {
+            showBottomNavigation()
             findNavController().navigateUp()
         }
 
@@ -76,10 +83,6 @@ class ProductDetailsFragment: Fragment()
 
             viewModel.addUpdateProductInCart(CartProduct(product, 1, selectedColor, selectedSize))
         }
-
-        viewModel.addToCart.handleScope(this, binding.AddToCart, null, {
-            binding.AddToCart.setBackgroundColor(resources.getColor(R.color.teal_200))
-        })
 
         binding.apply {
             var percentMult: Float
@@ -112,9 +115,14 @@ class ProductDetailsFragment: Fragment()
         }
 
         viewPagerAdapter.differ.submitList(product.images)
-        product.colors?.let { colorsAdapter.differ.submitList(it) }
-        product.sizes?.let { sizesAdapter.differ.submitList(it) }
-        product.offerPercentage?.let { }
+        product.colors?.let {
+            colorsAdapter.differ.submitList(it)
+            selectedColor = colorsAdapter.differ.currentList[0]
+        }
+        product.sizes?.let {
+            sizesAdapter.differ.submitList(it)
+            selectedSize = sizesAdapter.differ.currentList[0]
+        }
     }
 
     private fun setupSizesRv()

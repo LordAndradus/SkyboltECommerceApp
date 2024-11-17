@@ -1,4 +1,4 @@
-package edu.utsa.cs3443.skyboltecommerceapp.Util
+package edu.utsa.cs3443.skyboltecommerceapp.Helper
 
 import android.graphics.Rect
 import android.view.View

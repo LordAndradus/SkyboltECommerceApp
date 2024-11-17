@@ -25,6 +25,9 @@ object Constants
     const val INTRODUCTION_KEY = "IntroductionKey"
 
     const val CURRENCY_SYMBOL = '$'
+
+    //To obfuscate the key in the program, we will store the second part of the key here
+    val keyPartTwo: String = "IE1hcnkg"
 }
 
 /**

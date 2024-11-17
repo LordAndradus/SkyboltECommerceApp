@@ -51,4 +51,9 @@ class IntroductionViewModel @Inject constructor(
     {
         sharedPreferences.edit().putBoolean(INTRODUCTION_KEY, true).apply()
     }
+
+    fun finishedIntroduction(): Boolean
+    {
+        return sharedPreferences.getBoolean(INTRODUCTION_KEY, false)
+    }
 }

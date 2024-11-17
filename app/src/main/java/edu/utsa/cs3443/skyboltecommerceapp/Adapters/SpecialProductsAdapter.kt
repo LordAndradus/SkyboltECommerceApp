@@ -15,7 +15,7 @@ import edu.utsa.cs3443.skyboltecommerceapp.databinding.RvSpecialItemBinding
 
 class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHolder>()
 {
-    inner class ViewHolder(private val binding: RvSpecialItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: RvSpecialItemBinding): RecyclerView.ViewHolder(binding.root)
     {
         @SuppressLint("DefaultLocale")
         fun bind(product: Product)
@@ -30,6 +30,12 @@ class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHo
                     tvSpecialProductPrice.text = Utilities.price(finalPrice)
                     tvSpecialProductPrice.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                     tvSpecialProductPrice.setTypeface(null, Typeface.ITALIC)
+                }
+
+                btnAddToCart.setOnClickListener {
+                    btnAddToCart.startAnimation()
+                    onButtonClick?.invoke(product)
+                    btnAddToCart.revertAnimation()
                 }
             }
         }
@@ -75,4 +81,5 @@ class SpecialProductsAdapter: RecyclerView.Adapter<SpecialProductsAdapter.ViewHo
     }
 
     var onClick: ((Product) -> Unit) ?= null
+    var onButtonClick: ((Product) -> Unit) ?= null
 }

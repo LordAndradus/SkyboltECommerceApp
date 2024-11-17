@@ -21,10 +21,10 @@ import kotlinx.coroutines.launch
  *
  */
 
-class ResourceSignaler<T>(
+open class ResourceSignaler<T>(
     private val viewModel: ViewModel
 ) {
-    private val _signal = MutableStateFlow<Resource<T>>(Resource.Idle())
+    protected val _signal = MutableStateFlow<Resource<T>>(Resource.Idle())
     val signal = _signal.asStateFlow()
 
     private val _error = MutableSharedFlow<String>()
@@ -36,7 +36,7 @@ class ResourceSignaler<T>(
     fun start()
     {
         viewModel.viewModelScope.launch {
-            _signal.emit(Resource.Idle())
+            _signal.emit(Resource.Loading())
         }
     }
 
@@ -92,12 +92,17 @@ class ResourceSignaler<T>(
      * Handles the instance of the lifecycle scope and its accompanying logic. Takes 3 lambda arguments that can be null.
      *
      * @param Fragment The fragment instance we want to launch the lifecycleScope in
-     * @param View A progress bar view. If anything else is passed in, I can't guarantee it won't bug out.
+     * @param View Can be any view, but mostly useful for anything related to display progress
+     * @param Lambda A function to handle loading
+     * @param Lambda A function to handle success
+     * @param Lambda A function to handle errors/failures
+     * @param Boolean A toggle to set the passed view invisible or completely gone
      */
     fun handleScope(frag: Fragment, progressBar: View ?= null,
         onLoading: (() -> Unit) ?= null,
         onSuccess: (() -> Unit) ?= null,
-        onError: (() -> Unit) ?= null
+        onError: (() -> Unit) ?= null,
+        progressGone: Boolean = false
     ) {
         frag.lifecycleScope.launchWhenStarted {
             signal.collectLatest {
@@ -110,13 +115,13 @@ class ResourceSignaler<T>(
                     },
                     {
                         if(progressBar is CircularProgressButton) progressBar.revertAnimation()
-                        else progressBar?.visibility = View.INVISIBLE
+                        else progressBar?.visibility = if(!progressGone) View.INVISIBLE else View.GONE
                         onSuccess?.invoke()
                         onSuccessIterator?.invoke(it)
                     },
                     {
                         if(progressBar is CircularProgressButton) progressBar.revertAnimation()
-                        else progressBar?.visibility = View.INVISIBLE
+                        else progressBar?.visibility = if(!progressGone) View.INVISIBLE else View.GONE
                         Utilities.showToast(frag.requireContext(), it.message.toString())
                         onError?.invoke()
                         onFailureIterator?.invoke(it)
@@ -126,6 +131,22 @@ class ResourceSignaler<T>(
         }
     }
 
+    /**
+     * Method overload to handle when I only want to deal with hiding the progress bar completely
+     *
+     * @param Fragment
+     * @param View Can be any view, but mostly useful for anything related to display progress
+     * @param Boolean Toggles whether to make progressBar invisible or gone
+     */
+    fun handleScope(frag: Fragment, progressBar: View ?= null, progressGone: Boolean = false)
+    {
+        handleScope(frag, progressBar, null, null, null, progressGone)
+    }
+
+    /**
+     * Separate invokable delegates for handling specific resource cases
+     * when it requires "it" (which is a unit of data)
+     */
     var onLoadingIterator: ((Resource<T>) -> Unit) ?= null
     var onSuccessIterator: ((Resource<T>) -> Unit) ?= null
     var onFailureIterator: ((Resource<T>) -> Unit) ?= null

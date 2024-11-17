@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import edu.utsa.cs3443.skyboltecommerceapp.R
+import edu.utsa.cs3443.skyboltecommerceapp.Util.Utilities
 import edu.utsa.cs3443.skyboltecommerceapp.ViewModels.CartViewModel
 import edu.utsa.cs3443.skyboltecommerceapp.databinding.ActivityShoppingBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -38,18 +39,25 @@ class ShoppingActivity : AppCompatActivity()
         val navController = findNavController(R.id.ShoppingHostFragment)
         binding.BottomNavigator.setupWithNavController(navController)
 
-        viewModel.cartProducts.onSuccessIterator = {
-            val count = it.data?.size ?: 0
-            val bottomNavigationView = findViewById<BottomNavigationView>(R.id.BottomNavigator)
-            bottomNavigationView.getOrCreateBadge(R.id.cartFragment).apply {
-                number = count
-                backgroundColor = resources.getColor(R.color.g_blue)
-            }
-        }
-
         lifecycleScope.launch {
             viewModel.cartProducts.signal.collectLatest {
-                viewModel.cartProducts.onSuccessIterator?.invoke(it)
+                Utilities.ResourceOperation(it,
+                    {
+                        Utilities.nop()
+                    },
+                    {
+                        val count = it.data?.size ?: 0
+                        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.BottomNavigator)
+                        bottomNavigationView.getOrCreateBadge(R.id.cartFragment).apply {
+                            number = count
+                            backgroundColor = resources.getColor(R.color.g_blue)
+                        }
+
+                        if(count == 0) bottomNavigationView.removeBadge(R.id.cartFragment)
+                    },
+                    {
+                        Utilities.nop()
+                    })
             }
         }
     }
