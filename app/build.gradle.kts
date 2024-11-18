@@ -111,6 +111,8 @@ dependencies {
 
     //Coroutines with firebase teehee
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.1")
+
+
 }
 
 kapt{

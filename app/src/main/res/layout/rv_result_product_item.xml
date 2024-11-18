@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:backgroundTint="@color/g_white"
     app:cardElevation="0dp">
 
@@ -34,10 +35,10 @@
 
         <TextView
             android:id="@+id/tvProductCartName"
-            android:layout_width="140dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:fontFamily="sans-serif-light"
             android:text="Chair"
             android:textColor="@color/black"
@@ -49,8 +50,6 @@
             app:layout_constraintTop_toTopOf="@id/imageCartProduct"
             android:lines="1"
             />
-
-
 
         <TextView
             android:id="@+id/tvProductCartPrice"
@@ -65,77 +64,41 @@
             app:layout_constraintTop_toBottomOf="@id/tvProductCartName"
             />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageCartOutline"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:layout_marginTop="5dp"
-            android:src="@color/black"
+        <TextView
+            android:id="@+id/tvProductCartPreofferPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="$420.69"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintStart_toEndOf="@id/tvProductCartPrice"
+            app:layout_constraintTop_toBottomOf="@id/tvProductCartName"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvColors"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:listitem="@layout/rv_color_item"
             app:layout_constraintStart_toStartOf="@id/tvProductCartPrice"
             app:layout_constraintTop_toBottomOf="@id/tvProductCartPrice"
             />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageCartProductColor"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@color/g_blue"
-            app:layout_constraintStart_toStartOf="@id/imageCartOutline"
-            app:layout_constraintEnd_toEndOf="@id/imageCartOutline"
-            app:layout_constraintTop_toTopOf="@id/imageCartOutline"
-            app:layout_constraintBottom_toBottomOf="@id/imageCartOutline"
-            />
-
-        <View
-            android:id="@+id/rectImage"
-            android:layout_width="47dp"
-            android:layout_height="15dp"
-            android:background="@drawable/rectangle"
-            android:backgroundTint="@color/g_gray700"
-            android:src="@color/g_blue"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            app:layout_constraintTop_toBottomOf="@id/tvProductCartPrice"
-            app:layout_constraintStart_toEndOf="@id/tvProductCartPrice"
-            />
-
-        <TextView
-            android:id="@+id/tvCartProductSize"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSizes"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="L"
-            android:textSize="11sp"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/rectImage"
-            app:layout_constraintTop_toTopOf="@id/rectImage"
-            app:layout_constraintStart_toStartOf="@id/rectImage"
-            app:layout_constraintEnd_toEndOf="@id/rectImage"
-            />
-
-        <TextView
-            android:id="@+id/tvBillingProductQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="1"
-            android:layout_marginEnd="5dp"
+            android:orientation="horizontal"
+            tools:listitem="@layout/rv_size_item"
+            app:layout_constraintStart_toStartOf="@id/tvProductCartPrice"
+            app:layout_constraintTop_toBottomOf="@id/rvColors"
             />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
-
-
-
-
-
-
-
 
 </androidx.cardview.widget.CardView>

@@ -30,10 +30,10 @@
         android:id="@+id/searchFragment"
         android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Shopping.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_shopping_search">
+        tools:layout="@layout/fragment_search_bar">
         <action
-            android:id="@+id/action_searchFragment_to_productDetailsFragment"
-            app:destination="@id/productDetailsFragment" />
+            android:id="@+id/action_searchFragment_to_searchSuggestionFragment"
+            app:destination="@id/searchSuggestionFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -110,5 +110,23 @@
         <argument
             android:name="order"
             app:argType="edu.utsa.cs3443.skyboltecommerceapp.Data.Order" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Searching.SearchResultFragment"
+        android:label="SearchResultFragment"
+        tools:layout="@layout/fragment_search_results">
+        <action
+            android:id="@+id/action_searchResultFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchSuggestionFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Searching.SearchSuggestionFragment"
+        android:label="SearchSuggestionFragment"
+        tools:layout="@layout/fragment_search_suggestions">
+        <action
+            android:id="@+id/action_searchSuggestionFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
     </fragment>
 </navigation>

@@ -126,7 +126,7 @@ class ProductDetailsFragment: Fragment()
             selectedSize = sizesAdapter.differ.currentList[0]
         }
 
-        setupViewpagerRv()
+        setupViewpager()
     }
 
     private fun setupSizesRv()
@@ -145,7 +145,7 @@ class ProductDetailsFragment: Fragment()
         }
     }
 
-    private fun setupViewpagerRv()
+    private fun setupViewpager()
     {
         val context = requireContext()
 

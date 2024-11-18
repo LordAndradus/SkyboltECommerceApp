@@ -51,6 +51,31 @@
                 app:layout_constraintTop_toBottomOf="@id/rvSpecialProducts"
                 />
 
+            <!--<RelativeLayout
+                android:id="@+id/bestDealsPager"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/rvSpecialProducts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/BestDealsText">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/bestDealsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.viewpager2.widget.ViewPager2>
+
+                <com.zhpan.indicator.IndicatorView
+                    android:id="@+id/bestDealsIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    />
+            </RelativeLayout>-->
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvBestDeals"
                 android:layout_width="0dp"
@@ -60,7 +85,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/BestDealsText"
                 />
-
+-->
             <TextView
                 android:id="@+id/BestProductsText"
                 android:layout_width="wrap_content"
