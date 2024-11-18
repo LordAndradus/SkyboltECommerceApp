@@ -25,6 +25,15 @@
         <action
             android:id="@+id/action_homeFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cameraScannerFragment"
+            app:destination="@id/cameraScannerFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/homeFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -129,4 +138,8 @@
             android:id="@+id/action_searchSuggestionFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/cameraScannerFragment"
+        android:name="edu.utsa.cs3443.skyboltecommerceapp.Fragments.Searching.CameraScannerFragment"
+        android:label="CameraScannerFragment" />
 </navigation>

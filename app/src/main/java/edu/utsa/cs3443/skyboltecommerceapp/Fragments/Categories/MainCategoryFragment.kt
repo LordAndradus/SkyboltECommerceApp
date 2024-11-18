@@ -57,6 +57,7 @@ class MainCategoryFragment : Fragment(
             wantsToQuit = !wantsToQuit
         }
 
+
         return binding.root
     }
 
@@ -69,36 +70,9 @@ class MainCategoryFragment : Fragment(
         setupBestProductsRv()
         setupExploreProductsRv()
 
+        setupOnClicks()
+
         wantsToQuit = false
-
-        specialProductsAdapter.onClick = {
-            val b = Bundle().apply { putParcelable(PRODUCT, it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
-        }
-
-        specialProductsAdapter.onButtonClick = {
-            viewModel.addProductToCart(it)
-        }
-
-        bestDealsAdapter.onClick = {
-            val b = Bundle().apply { putParcelable(PRODUCT, it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
-        }
-
-        bestDealsAdapter.onButtonClick = {
-            val b = Bundle().apply { putParcelable(PRODUCT, it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
-        }
-
-        bestProductAdapter.onClick = {
-            val b = Bundle().apply { putParcelable(PRODUCT, it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
-        }
-
-        exploreProductsAdapter.onClick = {
-            val b = Bundle().apply { putParcelable(PRODUCT, it) }
-            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
-        }
 
         viewModel.specialProductsLister.handleScope(this, binding.MainCategoryProgressBar, true)
         viewModel.specialProductsLister.onSuccessIterator = {
@@ -127,6 +101,8 @@ class MainCategoryFragment : Fragment(
                 viewModel.exploreProductsLister.fetch()
             }
         })
+
+
     }
 
     private fun showLoading()
@@ -164,6 +140,38 @@ class MainCategoryFragment : Fragment(
                     }
                 }
             })
+        }
+    }
+
+    private fun setupOnClicks()
+    {
+        specialProductsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        specialProductsAdapter.onButtonClick = {
+            viewModel.addProductToCart(it)
+        }
+
+        bestDealsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        bestDealsAdapter.onButtonClick = {
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        bestProductAdapter.onClick = {
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
+        }
+
+        exploreProductsAdapter.onClick = {
+            val b = Bundle().apply { putParcelable(PRODUCT, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,  b)
         }
     }
 

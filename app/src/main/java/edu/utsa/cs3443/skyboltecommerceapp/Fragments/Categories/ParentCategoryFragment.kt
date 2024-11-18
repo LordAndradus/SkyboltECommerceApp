@@ -52,26 +52,6 @@ open class ParentCategoryFragment () : Fragment(
         }
     }
 
-    fun showOfferLoading()
-    {
-        binding.offerLoadingBar.visibility = View.VISIBLE
-    }
-
-    fun hideOfferLoading()
-    {
-        binding.offerLoadingBar.visibility = View.GONE
-    }
-
-    fun showExploreLoading()
-    {
-        binding.exploreLoadingBar.visibility = View.VISIBLE
-    }
-
-    fun hideExploreLoading()
-    {
-        binding.exploreLoadingBar.visibility = View.GONE
-    }
-
     open fun onOfferPagingRequest()
     {
 

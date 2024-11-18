@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation(libs.androidx.camera.lifecycle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -112,7 +113,13 @@ dependencies {
     //Coroutines with firebase teehee
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.1")
 
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    implementation("androidx.camera:camera-core:1.4.0")
+    implementation("androidx.camera:camera-view:1.4.0")
 
+    implementation("com.google.guava:guava:31.0.1-android")
+
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }
 
 kapt{
